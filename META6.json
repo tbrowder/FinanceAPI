@@ -6,8 +6,13 @@
   "build-depends": [
   ],
   "depends": [
+    "Cro::HTTP::Client",
+    "Cro::HTTP::Router",
+    "Cro::HTTP::Server",
+    "JSON::Fast",
+    "JSON::Path"
   ],
-  "description": "Provides routines for querying securities information using 'https://Financeapi.net'\n",
+  "description": "Provides routines for querying securities information using 'https://Financeapi.net'",
   "license": "Artistic-2.0",
   "name": "FinanceAPI",
   "perl": "6.d",
@@ -16,7 +21,7 @@
   },
   "resources": [
   ],
-  "source-url": "",
+  "source-url": "https://github.com/tbrowder/FinanceAPI.git",
   "tags": [
   ],
   "test-depends": [
