@@ -1,0 +1,54 @@
+use Test;
+
+use Cro;
+use JSON::Fast;
+use JSON::Path;
+
+use FinanceAPI;
+
+my $api = "t/api/yh-finance-api-specification.json";
+
+=begin comment
+
+# paths
+/v8/finance/spark
+
+/v11/finance/quoteSummary/{symbol}
+
+=end comment
+
+# build the query string before handing it to Cro
+# note the form of straight URL requests
+my $query = qq:to/HERE/;
+https://yfapi.net
+HERE
+$query .= trim;
+my $symbol = "JABAX";
+
+my $path = "/v11/finance/quoteSummary/{$symbol}";
+$query ~= $path;
+my $lang = "en";
+my $chunk0 = "?lang={$lang}";
+$query ~= $chunk0;
+my $region = "us";
+my $chunk = "&region={$region}";
+$query ~= $chunk;
+my $modules = "financialData";
+$chunk = "&modules=[{$modules}]";
+$query ~= $chunk;
+# security
+my $apikey = %*ENV<FINANCEAPI_KEY>;
+$chunk = "&ApiKeyAuth=[{$apikey}]";
+$query ~= $chunk;
+# "ApiKeyAuth":"[]"
+
+#say "query: <|$query|>";
+#say "DEBUG exit"; exit;
+
+my $resp = await Cro::HTTP::Client.get(
+    $query
+);
+my Str $body = await $resp.body-text();
+
+done-testing;
+
