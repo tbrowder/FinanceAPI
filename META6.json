@@ -6,9 +6,7 @@
   "build-depends": [
   ],
   "depends": [
-    "Cro::HTTP::Client",
-    "Cro::HTTP::Router",
-    "Cro::HTTP::Server",
+    "Cro",
     "JSON::Fast",
     "JSON::Path"
   ],

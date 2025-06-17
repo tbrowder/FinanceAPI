@@ -21,7 +21,7 @@ sub query(
     =end comment
 }
 
-sub v11FinanceQuoteSummary(
+sub path-v11FinanceQuoteSummary(
     Str $symbol,
     Bool :$all = False,
     :@modules = ["summaryDetail"],
@@ -55,6 +55,86 @@ sub v11FinanceQuoteSummary(
     $body;
 }
 
-sub v8FinanceSpark(
+sub path-v8FinanceSpark(
+    Str $symbol,
+    Bool :$all = False,
+    :@modules = ["summaryDetail"],
+    :$lang = "EN",
+    :$region = "US",
+    :$debug,
 ) is export {
+  # stock history
+
+    # build the query string before handing it to Cro, note the form of
+    # straight URL requests
+    my $query = <https://yfapi.net>;
+    my $path = "/v11/finance/quoteSummary/$symbol";
+    $query ~= $path;
+    my $chunk0 = "?lang={$lang}";
+    $query ~= $chunk0;
+    my $chunk = "&region={$region}";
+    $query ~= $chunk;
+    $chunk = "&modules={@modules.sort.join(',')}";
+    $query ~= $chunk;
+    my $client = Cro::HTTP::Client.new(
+        headers => [
+            accept => 'application/json',
+            X-API-KEY => "$apikey",
+        ],
+    );
+
+    my $resp = await $client.get($query);
+    my Str $body = await $resp.body-text();
+    $body = "(null)" unless $body.chars;
+    say $body if $debug;
+    $body;
+}
+
+sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
+    Str $ticker, # ticker! REQUIRED <= ticker=symbol of interest
+    :$events,    # not well defined...a comma-separated string, "div,split"
+    :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
+    :$range    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
+    :$lang = "EN",
+    :$region = "US",
+    :$debug,
+) is export {
+  # other history
+
+    # build the query string before handing it to Cro, note the form of
+    # straight URL requests
+    my $query = <https://yfapi.net>;
+    my $path = "/v8/finance/chart/$symbol/"; # {ticker}
+    $query ~= $path;
+    my $chunk0 = "?lang={$lang}";
+    $query ~= $chunk0;
+
+    # region
+    my $chunk = "&region={$region}";
+    $query ~= $chunk;
+
+    # range
+    $chunk = "&range={$range}";
+    $query ~= $chunk;
+
+    # interval
+    $chunk = "&interval={$interval}";
+    $query ~= $chunk;
+
+    # events
+    $chunk = "&events={$events}";
+    $query ~= $chunk;
+
+    my $client = Cro::HTTP::Client.new(
+        headers => [
+            accept => 'application/json',
+            X-API-KEY => "$apikey",
+        ],
+    );
+
+    my $resp = await $client.get($query);
+    my Str $body = await $resp.body-text();
+    $body = "(null)" unless $body.chars;
+    say $body if $debug;
+    $body;
 }
