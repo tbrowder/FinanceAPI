@@ -1,49 +1,10 @@
 unit module FinanceAPI;
 
-=begin comment
-
-/v11/finance/quoteSummary/{symbol}
-
-parameters
-==========
-
-name      description
----------------------
-lang
-string    en fr de it es zh
-(query)
-
-region
-string    us au ca fr de hk it es gb in
-(query)
-
-modules * required
-(query) financialData (and LOTS of other modules)
-
-
-/v8/finance/spark
-
-parameters
-==========
-
-name      description
----------------------
-interval
-string    1m 5m 15m 1d 1wk 1mo
-(query)
-
-range
-string    1d 5d 1mo 3mo 6mo 1y 5y max
-(query)
-
-symbols   * required
-string    Separated by commas
-(query)   Max 10
-
-=end comment
-
+use Cro;
 use JSON::Fast;
-use JSON::Path;
+use FinanceAPI::Vars;
+use FinanceAPI::Classes;
+
 use Cro::HTTP::Client;
 use Cro::HTTP::Router;
 use Cro::HTTP::Server;
@@ -58,4 +19,41 @@ sub query(
         '&x-api-keyApiKeyAuth=bnq6WNGJde3hn8G8KIOPZ85SwCuLScFk3kBD7IMu'
     );
     =end comment
+}
+
+sub v11FinanceQuoteSummary(
+    Str $symbol,
+    :@modules = <summaryDetail>,
+    :$lang = "EN",
+    :$region = "US",
+    :$debug,
+) is export {
+
+    # build the query string before handing it to Cro, note the form of
+    # straight URL requests
+    my $query = <https://yfapi.net>;
+    my $path = "/v11/finance/quoteSummary/$symbol";
+    $query ~= $path;
+    my $chunk0 = "?lang={$lang}";
+    $query ~= $chunk0;
+    my $chunk = "&region={$region}";
+    $query ~= $chunk;
+    $chunk = "&modules={@modules.sort.join(',')}";
+    $query ~= $chunk;
+
+    my $client = Cro::HTTP::Client.new(
+        headers => [
+            accept => 'application/json',
+            X-API-KEY => "$apikey",
+        ],
+    );
+
+    my $resp = await $client.get($query);
+    my Str $body = await $resp.body-text();
+    say $body;
+
+}
+
+sub v8FinanceSpark(
+) is export {
 }

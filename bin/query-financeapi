@@ -1,79 +1,76 @@
 #!/usr/bin/env raku
 
-use FinanceAPI;
 use JSON::Fast <pretty sorted-keys>;
 use JSON::Path;
 
-my $apif = "api/yh-finance-api-specification.json";
-my $debug = 0;
+use FinanceAPI;
+use FinanceAPI::Vars;
+
+my $apif = "t/api/yh-finance-api-specification.json";
+
+my $debug     = 0;
+my @symbols;
+my @modules;
+my $summary   = 0;
+my $daily     = 0;
+my $increment = 0;
+my $range     = 0;
+my $lang      = 0;
+my $region    = 0;
 if not @*ARGS {
     print qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} <mode> <args...> [debug]
+    Usage: {$*PROGRAM.basename} <mode> <options...> [debug]
 
-    With <mode> and <args...>, queries the FinanceAPI for
+    With <mode> and <options...>, queries the FinanceAPI for
     results to be processed.
 
     Modes:
+       da[ily]     - shows daily prices for a security
+       di[vidends] - shows dividends for a security
+       su[mmary]   - cycles 10 modules at a time to display data for a security
 
     Options:
+       sy[mbols]=s1,s2,..,sN # default is JABAX
+       mo[dules]=m1,m2,..,sN # see README
+       increment=X
+       range=X
+       lang=X
+       region=X
 
     HERE
     exit;
 }
 
 for @*ARGS {
-    my $jstr = from-json($apif.IO.slurp);
-    my %h = from-json($apif.IO.slurp);
-    for %h.kv -> $k, $v {
-        if $k eq "paths" {
-            say "    key $k";
-            if $v ~~ Hash {
-                my %h2 = %($v);
-                for %h2.kv -> $k, $v {
-                    say "    key $k";
-                    say "      value '$v";
-                }
-            }
-            elsif $v ~~ List {
-                my @lines = @($v);
-                say "  $_" for @lines.head; #[0..^10];
-                #say "  $_" for @lines[0..^10];
-            }
-            elsif $v ~~ Str {
-                my $s = $v.comb[0..^50].join;
-                say "   $s";
-            }
-            else {
-                say "WARNING: Unknown type for value for key $k";
-            }
-        }
-        elsif $k eq "security" {
-            say "  key $k";
-            if $v ~~ Hash {
-                my %h2 = %($v);
-            }
-            elsif $v ~~ List {
-                my @lines = @($v);
-            }
-            elsif $v ~~ Str {
-                my $s = $v.comb[0..^50].join;
-                say "   $s";
-            }
-            else {
-                say "WARNING: Unknown type for value for key $k";
-            }
-        }
+    when /^ :i d/ {
+        ++$debug;
     }
-
-    =begin comment
-    #say $jstr;
-    say %h.raku;
-    my $pretty = to-json $jkstr;
-    say $pretty;
-    =end comment
-
-    exit;
-
-    # my $res = query :$debug;
-    # say $res;
+    when /^ :i sy[m|mb|mbo|mbol|mbols]? '=' (\S+) / {
+        # a list of security symbols
+        my $s = ~$0;
+        $s ~~ s:g/','/ /;
+        @symbols = $s.words;
+    }
+    when /^ :i mo[d|du|dul|dule|dules]? '=' (\S+) / {
+        # a list of modules for api use
+        my $s = ~$0;
+        $s ~~ s:g/','/ /;
+        @modules = $s.words;
+    }
+    when /^ :i su[m|mm|mma|mmar|mmary]? (\S+) / {
+        ++$summary;
+    }
+    default {
+        say qq:to/HERE/;
+        FATAL: Unknown arg '$_', exiting...";
+        HERE
+    }
 }
+
+if @symbols {
+    say "found \@symbols..." if $debug;
+    while @symbols {
+    }
+}
+
+

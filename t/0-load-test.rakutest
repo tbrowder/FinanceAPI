@@ -2,6 +2,8 @@ use Test;
 
 my @modules = <
     FinanceAPI
+    FinanceAPI::Classes
+    FinanceAPI::Vars
 >;
 
 plan @modules.elems;

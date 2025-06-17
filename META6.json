@@ -17,7 +17,9 @@
   "name": "FinanceAPI",
   "perl": "6.d",
   "provides": {
-    "FinanceAPI": "lib/FinanceAPI.rakumod"
+    "FinanceAPI": "lib/FinanceAPI.rakumod",
+    "FinanceAPI::Classes": "lib/FinanceAPI/Classes.rakumod",
+    "FinanceAPI::Vars": "lib/FinanceAPI/Vars.rakumod"
   },
   "resources": [
   ],

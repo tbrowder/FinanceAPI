@@ -1,0 +1,17 @@
+unit module FinanceAPI::Vars;
+
+# security
+our $apikey is export = %*ENV<FINANCEAPI_KEY>;
+
+our %modules is export = set <
+summaryDetail assetProfile fundProfile financialData
+defaultKeyStatistics calendarEvents incomeStatementHistory
+incomeStatementHistoryQuarterly cashflowStatementHistory
+balanceSheetHistory earnings earningsHistory insiderHolders
+cashflowStatementHistory cashflowStatementHistoryQuarterly
+insiderTransactions secFilings indexTrend sectorTrend earningsTrend
+netSharePurchaseActivity upgradeDowngradeHistory institutionOwnership
+recommendationTrend balanceSheetHistory balanceSheetHistoryQuarterly
+fundOwnership majorDirectHolders majorHoldersBreakdown price quoteType
+esgScores
+>;
