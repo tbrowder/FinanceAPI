@@ -104,7 +104,7 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     # build the query string before handing it to Cro, note the form of
     # straight URL requests
     my $query = <https://yfapi.net>;
-    my $path = "/v8/finance/chart/$symbol/"; # {ticker}
+    my $path = "/v8/finance/chart/$ticker/"; # {ticker}
     $query ~= $path;
     my $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
