@@ -113,8 +113,8 @@ elsif $summary {
         else {
             @m.push(@modules.shift) while @modules.elems;
         }
-        my $res = v11FinanceQuoteSummary("jabax", :modules(@m), :$debug);
-        #my $res = v11FinanceQuoteSummary "jabax", :modules(@m), :$debug;
+        #my $res = v11FinanceQuoteSummary("jabax", :modules(@m), :$debug);
+        my $res = v11FinanceQuoteSummary "jabax", :modules(@m), :$debug;
         @res.push: $res;
     }
 
