@@ -23,7 +23,8 @@ sub query(
 
 sub v11FinanceQuoteSummary(
     Str $symbol,
-    :@modules = <summaryDetail>,
+    Bool :$all = False,
+    :@modules = ["summaryDetail"],
     :$lang = "EN",
     :$region = "US",
     :$debug,
@@ -40,7 +41,6 @@ sub v11FinanceQuoteSummary(
     $query ~= $chunk;
     $chunk = "&modules={@modules.sort.join(',')}";
     $query ~= $chunk;
-
     my $client = Cro::HTTP::Client.new(
         headers => [
             accept => 'application/json',
@@ -50,8 +50,9 @@ sub v11FinanceQuoteSummary(
 
     my $resp = await $client.get($query);
     my Str $body = await $resp.body-text();
-    say $body;
-
+    $body = "(null)" unless $body.chars;
+    say $body if $debug;
+    $body;
 }
 
 sub v8FinanceSpark(
