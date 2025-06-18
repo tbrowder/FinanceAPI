@@ -93,6 +93,30 @@ if @symbols {
 
 if $daily {
     say "Daily...";
+    my @symbols = <jabax jagix xon mrk>; # Exxon Merck
+    my $res = path-v8FinanceSpark @symbols, :$debug; # max of 10 symbols
+    # save to a JSON file
+
+    my $fo = "Daily-FinanceSpark-multi.json";
+    if $fo.IO.e {
+        if not $force {
+            say "WARNING: File '$fo' exists, aborting...";
+            exit;
+        }
+        elsif $force {
+            say "NOTE: File '$fo' exists, overwriting...";
+        }
+    }
+
+    my $fh = open $fo, :w;
+    # $res is a JSON string
+    # pretty print it
+    my %h = from-json $res;
+    my $jstr = to-json %h;
+    $fh.say: $jstr;
+    $fh.close;
+
+    say "See output file '$fo'";
 }
 elsif $dividends {
     say "Dividends...";
@@ -114,7 +138,7 @@ elsif $summary {
             @m.push(@modules.shift) while @modules.elems;
         }
         #my $res = v11FinanceQuoteSummary("jabax", :modules(@m), :$debug);
-        my $res = v11FinanceQuoteSummary "jabax", :modules(@m), :$debug;
+        my $res = path-v11FinanceQuoteSummary "jabax", :modules(@m), :$debug;
         @res.push: $res;
     }
 
@@ -126,16 +150,16 @@ elsif $summary {
         }
         elsif $force {
             say "NOTE: File '$fo' exists, overwriting...";
-            
         }
     }
     my $fh = open $fo, :w;
     for @res -> $res {
         # $res is a JSON string
+        # pretty print it
         my %h = from-json $res;
         my $jstr = to-json %h;
         $fh.say: $jstr;
+        $fh.close;
     }
-
     say "See output file '$fo'";
 }

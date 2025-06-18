@@ -7,9 +7,6 @@
   ],
   "depends": [
     "Cro",
-    "Cro::HTTP::Client",
-    "Cro::HTTP::Router",
-    "Cro::HTTP::Server",
     "JSON::Fast",
     "JSON::Path"
   ],
