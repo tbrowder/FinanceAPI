@@ -47,9 +47,6 @@ if not @*ARGS {
     exit;
 }
 for @*ARGS {
-    when /^ :i d/ {
-        ++$debug;
-    }
     when /^ :i f/ {
         ++$force;
     }
@@ -69,14 +66,17 @@ for @*ARGS {
         # TODO update after testing
         ++$summary;
     }
-    when /^ :i di [div|divi|divid|divide|dividen|dividend|dividends]? '=' (\S+) / {
+    when /^ :i di [div|divi|divid|divide|dividen|dividend|dividends]? / {
         ++$dividends;
     }
-    when /^ :i da [dai|dail|daily]? '=' (\S+) / {
+    when /^ :i da [dai|dail|daily]? / {
         ++$daily;
     }
-    when /^ :i ga [gai|gain|gains]? '=' (\S+) / {
+    when /^ :i ga [gai|gain|gains]?  / {
         ++$gains;
+    }
+    when /^ :i d/ {
+        ++$debug;
     }
     default {
         say qq:to/HERE/;
@@ -96,7 +96,6 @@ if $daily {
     my @symbols = <jabax jagix xon mrk>; # Exxon Merck
     my $res = path-v8FinanceSpark @symbols, :$debug; # max of 10 symbols
     # save to a JSON file
-
     my $fo = "Daily-FinanceSpark-multi.json";
     if $fo.IO.e {
         if not $force {
@@ -107,7 +106,6 @@ if $daily {
             say "NOTE: File '$fo' exists, overwriting...";
         }
     }
-
     my $fh = open $fo, :w;
     # $res is a JSON string
     # pretty print it
@@ -115,11 +113,34 @@ if $daily {
     my $jstr = to-json %h;
     $fh.say: $jstr;
     $fh.close;
-
     say "See output file '$fo'";
 }
 elsif $dividends {
     say "Dividends...";
+    #my @symbols = <jabax jagix xon mrk>; # Exxon Merck
+    my $ticker = "jabax"; # a single security 
+    # TODO add :@comparisons
+    # TODO handle multi-tickers in individual calls
+    my $res = path-v8FinanceChart $ticker, :$debug; # max of 10 symbols
+    # save to a JSON file
+    my $fo = "FinanceChart-multi.json";
+    if $fo.IO.e {
+        if not $force {
+            say "WARNING: File '$fo' exists, aborting...";
+            exit;
+        }
+        elsif $force {
+            say "NOTE: File '$fo' exists, overwriting...";
+        }
+    }
+    my $fh = open $fo, :w;
+    # $res is a JSON string
+    # pretty print it
+    my %h = from-json $res;
+    my $jstr = to-json %h;
+    $fh.say: $jstr;
+    $fh.close;
+    say "See output file '$fo'";
 }
 elsif $gains {
     say "Gains...";

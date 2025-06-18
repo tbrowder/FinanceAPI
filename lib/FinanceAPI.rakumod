@@ -56,7 +56,7 @@ sub path-v11FinanceQuoteSummary(
 }
 
 sub path-v8FinanceSpark(
-    Str @symbols where (@symbols.elems < 11), # max of 10
+    @symbols where (@symbols.elems < 11), # max of 10
     :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
     :$range    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y max
 
@@ -69,8 +69,7 @@ sub path-v8FinanceSpark(
     # build the query string before handing it to Cro, note the form of
     # straight URL requests
     my $query = <https://yfapi.net>;
-    my $symbols = @symbols.join(',');
-    my $path = "/v11/finance/quoteSummary/$symbols";
+    my $path = "/v8/finance/spark/";
     $query ~= $path;
     my $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
@@ -83,6 +82,11 @@ sub path-v8FinanceSpark(
     $query ~= $chunk;
     # range
     $chunk = "&range={$range}";
+    $query ~= $chunk;
+
+    # symbols
+    my $symbols = @symbols.join(',');
+    $chunk = "&symbols={$symbols}";
     $query ~= $chunk;
 
     my $client = Cro::HTTP::Client.new(
@@ -100,9 +104,10 @@ sub path-v8FinanceSpark(
 }
 
 sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
-    Str $ticker, # ticker! REQUIRED <= ticker=symbol of interest
-    :$events,    # not well defined...a comma-separated string, "div,split"
-    :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
+    $ticker,     # ticker! REQUIRED <= ticker=symbols of interest
+    :$events = "div,long,cap", # not well defined...a comma-separated string, "div,split"
+    :$comparisons,
+    :$interval = "1m",  # 1m...(1m 5m 15m 1d 1wk 1mo)
     :$range    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
     :$lang = "EN",
     :$region = "US",
@@ -113,7 +118,7 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     # build the query string before handing it to Cro, note the form of
     # straight URL requests
     my $query = <https://yfapi.net>;
-    my $path = "/v8/finance/chart/$ticker/"; # {ticker}
+    my $path = "/v8/finance/chart/{$ticker}"; # {ticker}
     $query ~= $path;
     my $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
@@ -130,9 +135,17 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     $chunk = "&interval={$interval}";
     $query ~= $chunk;
 
+    # comparisons
+    if $comparisons {
+        $chunk = "&comparisons={$comparisons}";
+        $query ~= $chunk;
+    }
+
     # events
-    $chunk = "&events={$events}";
-    $query ~= $chunk;
+    if $events {
+        $chunk = "&events={$events}";
+        $query ~= $chunk;
+    }
 
     my $client = Cro::HTTP::Client.new(
         headers => [
