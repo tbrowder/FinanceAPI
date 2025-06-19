@@ -6,8 +6,6 @@ use FinanceAPI::Vars;
 use FinanceAPI::Classes;
 
 use Cro::HTTP::Client;
-use Cro::HTTP::Router;
-use Cro::HTTP::Server;
 
 sub query(
     $query?,
