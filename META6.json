@@ -6,6 +6,7 @@
   "build-depends": [
   ],
   "depends": [
+    "Hash2Class",
     "Cro",
     "Cro::HTTP::Client",
     "JSON::Fast",
