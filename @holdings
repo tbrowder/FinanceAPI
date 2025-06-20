@@ -1,7 +1,35 @@
 [
-# list of holdings, max of 10 per list
+# list of holdings
+#== equities
+<
+bdx
+emn
+embc
+xom
+hd
+mrk
+msft
+nvg
+ogn
+pfe
+pg
+shw
+ci
+ko
+viatris
+mmu
+>,
+#== mutual funds
 <
 JABAX
+jagix
+artix
+dodbx
+dodgx
+vtiax
+vtsax
+rsegx
 >,
+
 ];
 

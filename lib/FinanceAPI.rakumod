@@ -7,20 +7,12 @@ use FinanceAPI::Classes;
 
 use Cro::HTTP::Client;
 
-sub query(
-    $query?,
-    :$debug,
-    ) is export {
-    =begin comment
-    my $client = Cro::HTTP::Client.get(
-        'https://yfapi.net/v11/finance/quoteSummary/jabax?' \
-        '&x-api-keyApiKeyAuth=bnq6WNGJde3hn8G8KIOPZ85SwCuLScFk3kBD7IMu'
-    );
-    =end comment
-}
-
+# Rarely used, voluminous textual data
+# needs post-query processing to produce a
+# readable text form with max of 72-80 chars. Idea
+# candidate for PDF output.
 sub path-v11FinanceQuoteSummary(
-    Str $symbol,
+    Str $symbol, # only one symbol can be entered per query
     Bool :$all = False,
     :@modules = ["summaryDetail"],
     :$lang = "EN",
@@ -54,9 +46,10 @@ sub path-v11FinanceQuoteSummary(
 }
 
 sub path-v8FinanceSpark(
+    # this is the daily
     @symbols where (@symbols.elems < 11), # max of 10
-    :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
-    :$range    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y max
+    Str :$interval!, # = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
+    Str :$range!,    # = "1y", # 1d 5d 1mo 3mo 6mo 1y 5y max
 
     :$lang = "EN",
     :$region = "US",
@@ -75,9 +68,11 @@ sub path-v8FinanceSpark(
     # region
     my $chunk = "&region={$region}";
     $query ~= $chunk;
+
     # interval
     $chunk = "&interval={$interval}";
     $query ~= $chunk;
+
     # range
     $chunk = "&range={$range}";
     $query ~= $chunk;
@@ -102,11 +97,11 @@ sub path-v8FinanceSpark(
 }
 
 sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
-    $ticker,     # ticker! REQUIRED <= ticker=symbols of interest
-    :$events = "div,long,cap", # not well defined...a comma-separated string, "div,split"
+    $ticker,  # ticker! REQUIRED <= ticker=symbol of interest
+    :$events, #  = "div,split", # not well defined...a comma-separated string
     :$comparisons,
-    :$interval = "1m",  # 1m...(1m 5m 15m 1d 1wk 1mo)
-    :$range    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
+    :$interval, # not required = "1d",  # 1m...(1m 5m 15m 1d 1wk 1mo)
+    :$range, # not required    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
     :$lang = "EN",
     :$region = "US",
     :$debug,
@@ -126,12 +121,16 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     $query ~= $chunk;
 
     # range
-    $chunk = "&range={$range}";
-    $query ~= $chunk;
+    if $range {
+        $chunk = "&range={$range}";
+        $query ~= $chunk;
+    }
 
     # interval
-    $chunk = "&interval={$interval}";
-    $query ~= $chunk;
+    if $interval {
+        $chunk = "&interval={$interval}";
+        $query ~= $chunk;
+    }
 
     # comparisons
     if $comparisons {
@@ -158,3 +157,88 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     say $body if $debug;
     $body;
 }
+
+sub get-file-handle(
+    $fname,
+    :$force,
+    :$debug,
+    --> IO::Handle
+    ) is export {
+    my $fo = $fname;
+    if $fo.IO.e {
+        if not $force {
+            say "WARNING: File '$fo' exists, aborting...";
+            exit;
+        }
+        elsif $force {
+            say "NOTE: File '$fo' exists, overwriting...";
+        }
+    }
+    my $fh = open $fo, :w;
+    $fh;
+}
+
+sub from-timestamp(
+    UInt $time,
+    :$debug,
+    --> DateTime
+    ) is export {
+}
+
+sub read-daily(
+    ) is export {
+    # Input is a JSON string
+}
+
+sub read-dividends(
+    ) is export {
+    # Input is a JSON string
+}
+
+# Read and parse data from a JSON file
+# A recursive subroutine using the data from a JSON file
+# Courtesy of ChatGPT
+#   my $json-text = "data.json".IO.slurp;
+#   my $data = from-json $json-text;
+sub inspect-json(
+    $data, # output from "from-json $json-string
+    $indent = 0;
+    :$debug,
+    ) is export {
+    my $prefix = " " x $indent;
+
+    given $data {
+        when Hash {
+            say "{$prefix}Hash \{";
+            for $data.kv -> $key, $value {
+                print "{$prefix}  $key: ";
+                inspect-json $value, $indent + 4;
+            }
+            say "{$prefix}\}";
+        }
+        when Array {
+            say "{$prefix}Array \[";
+            for $data.values -> $value {
+                inspect-json $value, $indent + 4;
+            }
+            say "{$prefix}\]";
+        }
+        when Str {
+            say "{$prefix}Str: $data";
+        }
+        =begin comment
+        when Numeric {
+            say "{$prefix}: {$data.Numeric}";
+        }
+        when Int {
+            say "{$prefix}: {$data.Str}";
+        }
+        =end comment
+        default {
+#           say "FATAL: Unknown object '{$data.raku}'";
+#           exit;
+            say "{$prefix}{$data.raku}";
+        }
+    }
+}
+

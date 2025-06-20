@@ -2,7 +2,6 @@
 
 use JSON::Fast <pretty sorted-keys>;
 use JSON::Path;
-
 use FinanceAPI;
 use FinanceAPI::Vars;
 
@@ -30,18 +29,18 @@ if not @*ARGS {
     results to be processed.
 
     Modes:
-       da[ily]     - shows daily prices for a security
-       di[vidends] - shows dividends for a security
+       da[ily]     - shows daily prices for 1..10 securities
+       di[vidends] - shows dividends and splites for a security
        su[mmary]   - cycles 10 modules at a time to display data for a security
 
     Options:
        sy[mbols]=s1,s2,..,sN # default is JABAX
        mo[dules]=m1,m2,..,sN # see README
        force
-       increment=X
-       range=X
-       lang=X
-       region=X
+       increment=X # default 1d
+       range=X     # default max
+       lang=X      # default en
+       region=X    # default us
 
     HERE
     exit;
@@ -54,7 +53,7 @@ for @*ARGS {
         # a list of security symbols
         my $s = ~$0;
         $s ~~ s:g/','/ /;
-        @symbols = $s.words;
+        @symbols = $s.uc.words;
     }
     when /^ :i mo [d|du|dul|dule|dules]? '=' (\S+) / {
         # a list of modules for api use
@@ -72,9 +71,6 @@ for @*ARGS {
     when /^ :i da [dai|dail|daily]? / {
         ++$daily;
     }
-    when /^ :i ga [gai|gain|gains]?  / {
-        ++$gains;
-    }
     when /^ :i d/ {
         ++$debug;
     }
@@ -85,28 +81,14 @@ for @*ARGS {
     }
 }
 
-if @symbols {
-    say "found \@symbols..." if $debug;
-    while @symbols {
-    }
-}
-
 if $daily {
     say "Daily...";
     my @symbols = <jabax jagix xon mrk>; # Exxon Merck
     my $res = path-v8FinanceSpark @symbols, :$debug; # max of 10 symbols
     # save to a JSON file
     my $fo = "Daily-FinanceSpark-multi.json";
-    if $fo.IO.e {
-        if not $force {
-            say "WARNING: File '$fo' exists, aborting...";
-            exit;
-        }
-        elsif $force {
-            say "NOTE: File '$fo' exists, overwriting...";
-        }
-    }
-    my $fh = open $fo, :w;
+    my $fh = get-file-handle $fo, :$force;
+
     # $res is a JSON string
     # pretty print it
     my %h = from-json $res;
@@ -124,16 +106,7 @@ elsif $dividends {
     my $res = path-v8FinanceChart $ticker, :$debug; # max of 10 symbols
     # save to a JSON file
     my $fo = "FinanceChart-multi.json";
-    if $fo.IO.e {
-        if not $force {
-            say "WARNING: File '$fo' exists, aborting...";
-            exit;
-        }
-        elsif $force {
-            say "NOTE: File '$fo' exists, overwriting...";
-        }
-    }
-    my $fh = open $fo, :w;
+    my $fh = get-file-handle $fo, :$force;
     # $res is a JSON string
     # pretty print it
     my %h = from-json $res;
@@ -164,16 +137,7 @@ elsif $summary {
     }
 
     my $fo = "FullTestquoteSummary.json";
-    if $fo.IO.e {
-        if not $force {
-            say "WARNING: File '$fo' exists, aborting...";
-            exit;
-        }
-        elsif $force {
-            say "NOTE: File '$fo' exists, overwriting...";
-        }
-    }
-    my $fh = open $fo, :w;
+    my $fh = get-file-handle $fo, :$force;
     for @res -> $res {
         # $res is a JSON string
         # pretty print it
