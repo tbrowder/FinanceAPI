@@ -1,0 +1,8 @@
+use Test;
+
+use FinanceAPI;
+use FinanceAPI::Dailies;
+
+is 1, 1;
+
+done-testing;

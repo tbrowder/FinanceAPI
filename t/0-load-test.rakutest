@@ -4,6 +4,13 @@ my @modules = <
     FinanceAPI
     FinanceAPI::Classes
     FinanceAPI::Vars
+
+    FinanceAPI::Charts
+    FinanceAPI::Dailies
+    FinanceAPI::Options
+    FinanceAPI::Quotes
+    FinanceAPI::Summaries
+
 >;
 
 plan @modules.elems;
