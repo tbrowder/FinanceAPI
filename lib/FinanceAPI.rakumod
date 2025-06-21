@@ -13,15 +13,24 @@ our $apikey is export = %*ENV<FINANCEAPI_APIKEY>;
 
 sub path-v8FinanceSpark(
     # this is the daily stock history
-    @symbols where (@symbols.elems < 11), # max of 10
-    Str :$interval!, # = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
-    Str :$range!,    # = "1y", # 1d 5d 1mo 3mo 6mo 1y 5y max
+    
+    # max of 10, leave empty for default values for free tier
+    @symbols is copy where (@symbols.elems < 11), 
+    # defaults for free tier for JAGIX, MRK
+    Str :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
+    Str :$range    = "6mo", # 1d 5d 1mo 3mo 6mo 1y 5y max
 
-    :$lang = "EN",
-    :$region = "US",
+    # other defaults
+    :$lang     = "EN",
+    :$region   = "US",
     :$prettify = True,
     :$debug,
 ) is export {
+    unless @symbols.elems {
+        # defaults for free tier for JAGIX, MRK
+        @symbols = ["JAGIX", "MRK"];
+    }
+
     # stock history
 
     # build the query string before handing it to Cro, note the form
@@ -71,12 +80,16 @@ sub path-v8FinanceSpark(
 
 sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     $ticker,  # ticker! REQUIRED <= ticker=symbol of interest
-    :$events, #  = "div,split", # not well defined...a comma-separated string
-    :$comparisons,
-    :$interval, # not required = "1d",  # 1m...(1m 5m 15m 1d 1wk 1mo)
-    :$range, # not required    = "max", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
-    :$lang = "EN",
-    :$region = "US",
+    :$events  = "div,split", # not well defined...a comma-separated string
+    :$comparisons, # not required
+
+    # defaults for free tier:
+    :$interval = "1d",  # (1m 5m 15m 1d 1wk 1mo)
+    :$range    = "6mo", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
+
+    # other defaults
+    :$lang     = "EN",
+    :$region   = "US",
     :$prettify = True,
     :$debug,
 ) is export {
