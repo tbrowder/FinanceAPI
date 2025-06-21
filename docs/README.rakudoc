@@ -63,7 +63,7 @@ get desired data. See the details at L<|https://financeapi.net>.
 
 Note the API key obtained must be assigned to the user's
 environment variable C<FINANECAPI_KEY>. Then, in any code
-using the API, the key is accessed as C<V<%*ENV<FINANCEAPI_API>>>.
+using the API, the key is accessed as V<C<%*ENV<FINANCEAPI_API>>>.
 
 =head1 AUTHOR
 
