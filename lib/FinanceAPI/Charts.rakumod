@@ -15,6 +15,7 @@ class Chart does Hash2Class[
 
 # we use the class in an exported subroutine
 sub get-chart-data(
+    $data, # 
     :$debug,
     ) is export {
 }
