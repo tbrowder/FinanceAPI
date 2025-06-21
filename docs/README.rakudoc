@@ -44,7 +44,6 @@ string    Separated by commas
 
 B<FinanceAPI> - Provides routines for querying securities information using 'https://Financeapi.net'
 
-
 =head1 SYNOPSIS
 
 =begin code :lang<raku>
@@ -68,6 +67,30 @@ do this in the user's C<$HOME/.bash_aliases> file:
 =begin code
 export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 =end code
+
+Note tests in /t do not need an API key, but tests in /xt do.
+
+=head2 Current status
+
+The following three query paths and their routines are currently available.
+
+=item ?
+=item ?
+=item ?
+
+Other query paths are defined the Financeapi.net website, 
+but they have not yet been handled. File an issue or, better yet,
+submit a PR if you want others.
+
+=begin code
+=end code
+
+
+Their default values should give usable data for the past
+six months. Their default values are set for the author's
+convenience for testing the free tier:
+
+C<EN> languageavailable
 
 =head1 AUTHOR
 

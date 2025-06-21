@@ -22,6 +22,25 @@ Note the API key obtained *must* be assigned to the user's environment variable 
 
     export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 
+Note tests in /t do not need an API key, but tests in /xt do.
+
+Current status
+--------------
+
+The following three query paths and their routines are currently available.
+
+  * ?
+
+  * ?
+
+  * ?
+
+Other query paths are defined the Financeapi.net website, but they have not yet been handled. File an issue or, better yet, submit a PR if you want others.
+
+Their default values should give usable data for the past six months. Their default values are set for the author's convenience for testing the free tier:
+
+`EN` languageavailable
+
 AUTHOR
 ======
 
