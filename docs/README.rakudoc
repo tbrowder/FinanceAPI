@@ -62,8 +62,8 @@ successfully use the full capability of this module to
 get desired data. See the details at L<|https://financeapi.net>.
 
 Note the API key obtained must be assigned to the user's
-environment variable C<FINANEAPI_KEY>. Then, in any code
-using the API, the key is accessed as C<%*ENV<FINANCEAPI_API>>.
+environment variable C<FINANECAPI_KEY>. Then, in any code
+using the API, the key is accessed as C<V<%*ENV<FINANCEAPI_API>>>.
 
 =head1 AUTHOR
 

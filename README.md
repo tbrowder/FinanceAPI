@@ -18,7 +18,7 @@ DESCRIPTION
 
 **FinanceAPI** has a set of routines to extract financial data from various markets around the world using their APIs. There is a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [](https://financeapi.net).
 
-Note the API key obtained must be assigned to the user's environment variable `FINANEAPI_KEY`. Then, in any code using the API, the key is accessed as `%*ENV<FINANCEAPI_API>`.
+Note the API key obtained must be assigned to the user's environment variable `FINANECAPI_KEY`. Then, in any code using the API, the key is accessed as `V<%*ENV<FINANCEAPI_API>`>.
 
 AUTHOR
 ======
