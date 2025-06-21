@@ -1,20 +1,32 @@
 #!/usr/bin/env raku
 use JSON::Pretty;
+use File::Find;
 
 use lib "./lib";
 use FinanceAPI;
+use FinanceAPI::Subs;
+use FinanceAPI::Classes;
 
 if not @*ARGS {
     print qq:to/HERE/;
-    Usage: {$*PROGRAM.basename} <json file>
+    Usage: {$*PROGRAM.basename} <json file> | go
 
-    Gives info about the structure of the input file.
+    Gives info about the structure of the input file or
+    the files in dir '/test-jsons'.
     
     HERE
     exit;
 }
 my $f = @*ARGS.head; 
-my $data = from-json $f.IO.slurp;
+if $f.IO.r {
+    my $data = from-json $f.IO.slurp;
+    inspect-json $data;
+}
+else {
+    my @jfils = find :$dir, :type<file>, :name(//);:
+}
+
+
 
 =begin comment
     # $res is a JSON string
@@ -31,4 +43,3 @@ say $jstr;
 exit;
 }
 
-inspect-json $data;

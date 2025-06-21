@@ -2,26 +2,28 @@ unit module FinanceAPI::Subs;
 
 use JSON::Pretty;
 
-# Note all routines here should NOT depend on the top-level
-# modules.
+# Note all routines in here should NOT, in general,
+# depend on the top-level modules.
 
 sub from-timestamp(
-    UInt $time,
+    UInt $posix, # posix time
     :$debug,
     --> DateTime
     ) is export {
+    DateTime.new: Instant.from-posix($posix);
 }
 
-
 # Read and parse data from a JSON file
-# A recursive subroutine using the data from a JSON file
+# A recursive subroutine using the data from a JSON file.
 # Courtesy of ChatGPT (with my tweaks)
 #   my $json-text = "data.json".IO.slurp;
 #   my $data = from-json $json-text;
 # This can be used as a filter by a parent sub
-# to extract data from a JSON string
+# or class # to extract data from a JSON string.
 sub inspect-json(
-    $data, # output from "from-json $json-string
+    # $data is output from 'from-json $json-string'
+    # often a plain Hash, but not always.
+    $data, 
     $indent = 0;
     :$debug,
     ) is export {
@@ -29,8 +31,7 @@ sub inspect-json(
 
     given $data {
         when Hash {
-            say "{$prefix}Hash \{";
-            for $data.kv -> $key, $value {
+            say "{$prefix}Hash \{"; for $data.kv -> $key, $value {
                 print "{$prefix}  $key: ";
                 inspect-json $value, $indent + 4;
             }
@@ -98,3 +99,12 @@ sub read-events(
     ) is export {
     # Input is a JSON string
 }
+
+sub extract-json-data(
+    $json-string,
+    :$debug,
+    ) is export {
+    # parent of (i,e., uses) sub inspect-json
+    
+}
+

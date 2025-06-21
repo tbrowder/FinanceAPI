@@ -6,6 +6,7 @@
   "build-depends": [
   ],
   "depends": [
+    "File::Find",
     "Hash2Class",
     "Cro",
     "Cro::HTTP::Client",
@@ -21,6 +22,7 @@
     "FinanceAPI::Charts": "lib/FinanceAPI/Charts.rakumod",
     "FinanceAPI::Classes": "lib/FinanceAPI/Classes.rakumod",
     "FinanceAPI::Dailies": "lib/FinanceAPI/Dailies.rakumod",
+    "FinanceAPI::ExtractJSON": "lib/FinanceAPI/ExtractJSON.rakumod",
     "FinanceAPI::Not-Used": "lib/FinanceAPI/Not-Used.rakumod",
     "FinanceAPI::Options": "lib/FinanceAPI/Options.rakumod",
     "FinanceAPI::Quotes": "lib/FinanceAPI/Quotes.rakumod",

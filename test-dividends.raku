@@ -4,15 +4,14 @@ use JSON::Pretty;
 
 use lib "./lib";
 use FinanceAPI;
-use FinanceAPI:Vars;
 
 my ($fo, $res, %h, $fh, $jstr);
 
-my $symbol = "jagix";
+my @symbols = ["JAGIX", "MRK"];
 
 my @fo;
-#my $interval = "1d";
-my $range     = "1y";
+my $interval = "1d";
+my $range    = "5d";
 $res = path-v8FinanceChart $symbol, :$range; 
 $fo = "dividends-default.json";
 $fo.IO.spurt: $res;

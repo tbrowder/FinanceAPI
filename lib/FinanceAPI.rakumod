@@ -12,9 +12,9 @@ use FinanceAPI::Subs;
 our $apikey is export = %*ENV<FINANCEAPI_APIKEY>;
 
 sub path-v8FinanceSpark(
-    # this is the daily stock history
+    # this is the daily security price  history
     
-    # max of 10, leave empty for default values for free tier
+    # max of 10, leave empty for default values for the free tier
     @symbols is copy where (@symbols.elems < 11), 
     # defaults for free tier for JAGIX, MRK
     Str :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
@@ -33,40 +33,41 @@ sub path-v8FinanceSpark(
 
     # stock history
 
+    my ($query, $chunk0, $chunk, $path, Str $body, $resp, $client);
     # build the query string before handing it to Cro, note the form
     # of straight URL requests
-    my $query = <https://yfapi.net>;
-    my $path = "/v8/finance/spark/";
+    $query = <https://yfapi.net>;
+    $path = "/v8/finance/spark/";
     $query ~= $path;
-    my $chunk0 = "?lang={$lang}";
+    $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
 
     # region
-    my $chunk = "&region={$region}";
+    $chunk  = "&region={$region}";
     $query ~= $chunk;
 
     # interval
-    $chunk = "&interval={$interval}";
+    $chunk  = "&interval={$interval}";
     $query ~= $chunk;
 
     # range
-    $chunk = "&range={$range}";
+    $chunk  = "&range={$range}";
     $query ~= $chunk;
 
     # symbols
     my $symbols = @symbols.join(',');
-    $chunk = "&symbols={$symbols}";
+    $chunk  = "&symbols={$symbols}";
     $query ~= $chunk;
 
-    my $client = Cro::HTTP::Client.new(
+    $client = Cro::HTTP::Client.new(
         headers => [
             accept => 'application/json',
             X-API-KEY => "$apikey",
         ],
     );
 
-    my $resp = await $client.get($query);
-    my Str $body = await $resp.body-text();
+    $resp = await $client.get($query);
+    $body = await $resp.body-text();
 
     # $body is a JSON string, prettify it...
     if $prettify {
@@ -83,7 +84,7 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     :$events  = "div,split", # not well defined...a comma-separated string
     :$comparisons, # not required
 
-    # defaults for free tier:
+    # defaults for the free tier:
     :$interval = "1d",  # (1m 5m 15m 1d 1wk 1mo)
     :$range    = "6mo", # 1d 5d 1mo 3mo 6mo 1y 5y 10y ytd max
 
@@ -93,53 +94,54 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
     :$prettify = True,
     :$debug,
 ) is export {
-  # other history
+    # other history
 
+    my ($query, $chunk0, $chunk, $path, Str $body, $resp, $client);
     # build the query string before handing it to Cro, note the form of
     # straight URL requests
-    my $query = <https://yfapi.net>;
-    my $path = "/v8/finance/chart/{$ticker}"; # {ticker}
+    $query   = <https://yfapi.net>;
+    $path   = "/v8/finance/chart/{$ticker}"; # {ticker}
     $query ~= $path;
-    my $chunk0 = "?lang={$lang}";
+    $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
 
     # region
-    my $chunk = "&region={$region}";
+    $chunk  = "&region={$region}";
     $query ~= $chunk;
 
     # range
     if $range {
-        $chunk = "&range={$range}";
+        $chunk  = "&range={$range}";
         $query ~= $chunk;
     }
 
     # interval
     if $interval {
-        $chunk = "&interval={$interval}";
+        $chunk  = "&interval={$interval}";
         $query ~= $chunk;
     }
 
     # comparisons
     if $comparisons {
-        $chunk = "&comparisons={$comparisons}";
+        $chunk  = "&comparisons={$comparisons}";
         $query ~= $chunk;
     }
 
     # events
     if $events {
-        $chunk = "&events={$events}";
+        $chunk  = "&events={$events}";
         $query ~= $chunk;
     }
 
-    my $client = Cro::HTTP::Client.new(
+    $client = Cro::HTTP::Client.new(
         headers => [
             accept => 'application/json',
             X-API-KEY => "$apikey",
         ],
     );
 
-    my $resp = await $client.get($query);
-    my Str $body = await $resp.body-text();
+    $resp = await $client.get($query);
+    $body = await $resp.body-text();
 
     # $body is a JSON string, prettify it...
     if $prettify {
@@ -155,35 +157,46 @@ sub path-v8FinanceChart( # {ticker} # misleading, comparisons not needed
 # produce a readable text form with max of 72-80 chars. Idea candidate
 # for PDF output.
 sub path-v11FinanceQuoteSummary(
-    Str $symbol, # only one symbol can be entered per query
+    Str $symbol = "MRK", # only one symbol can be entered per query
     Bool :$all = False,
     :@modules = ["summaryDetail"],
-    :$lang = "EN",
-    :$region = "US",
+
+    # other defaults
+    :$lang     = "EN",
+    :$region   = "US",
     :$prettify = True,
     :$debug,
 ) is export {
 
+    my ($query, $chunk0, $chunk, $path, Str $body, $resp, $client);
     # build the query string before handing it to Cro, note the form of
     # straight URL requests
-    my $query = <https://yfapi.net>;
-    my $path = "/v11/finance/quoteSummary/$symbol";
+    $query  = <https://yfapi.net>;
+    $path   = "/v11/finance/quoteSummary/$symbol";
     $query ~= $path;
-    my $chunk0 = "?lang={$lang}";
+    $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
-    my $chunk = "&region={$region}";
+
+    $chunk  = "&modules={@modules.sort.join(',')}";
     $query ~= $chunk;
-    $chunk = "&modules={@modules.sort.join(',')}";
+
+    # region
+    $chunk  = "&region={$region}";
     $query ~= $chunk;
-    my $client = Cro::HTTP::Client.new(
+
+    # lang
+    $chunk  = "&lang={$lang}";
+    $query ~= $chunk;
+
+    $client = Cro::HTTP::Client.new(
         headers => [
             accept => 'application/json',
             X-API-KEY => "$apikey",
         ],
     );
 
-    my $resp = await $client.get($query);
-    my Str $body = await $resp.body-text();
+    $resp = await $client.get($query);
+    $body = await $resp.body-text();
 
     # $body is a JSON string, prettify it...
     if $prettify {

@@ -12,6 +12,7 @@ my @modules = <
     FinanceAPI::Summaries
     FinanceAPI::Not-Used
     FinanceAPI::Subs
+    FinanceAPI::ExtractJSON
 >;
 
 plan @modules.elems;
