@@ -1,0 +1,6 @@
+Create a minimum json file for each of the query types
+for ease of documentation.
+
+Put tests needing an API key in /xt. Make note in
+the docs.
+

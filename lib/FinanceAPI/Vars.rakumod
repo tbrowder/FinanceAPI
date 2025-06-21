@@ -1,7 +1,5 @@
 unit module FinanceAPI::Vars;
 
-# security
-our $apikey is export = %*ENV<FINANCEAPI_KEY>;
 
 our %modules is export = set <
 summaryDetail assetProfile fundProfile financialData

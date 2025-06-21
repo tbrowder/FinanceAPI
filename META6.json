@@ -9,7 +9,7 @@
     "Hash2Class",
     "Cro",
     "Cro::HTTP::Client",
-    "JSON::Fast",
+    "JSON::Pretty",
     "JSON::Path"
   ],
   "description": "Provides routines for querying securities information using 'https://Financeapi.net'",
@@ -21,8 +21,10 @@
     "FinanceAPI::Charts": "lib/FinanceAPI/Charts.rakumod",
     "FinanceAPI::Classes": "lib/FinanceAPI/Classes.rakumod",
     "FinanceAPI::Dailies": "lib/FinanceAPI/Dailies.rakumod",
+    "FinanceAPI::Not-Used": "lib/FinanceAPI/Not-Used.rakumod",
     "FinanceAPI::Options": "lib/FinanceAPI/Options.rakumod",
     "FinanceAPI::Quotes": "lib/FinanceAPI/Quotes.rakumod",
+    "FinanceAPI::Subs": "lib/FinanceAPI/Subs.rakumod",
     "FinanceAPI::Summaries": "lib/FinanceAPI/Summaries.rakumod",
     "FinanceAPI::Vars": "lib/FinanceAPI/Vars.rakumod"
   },

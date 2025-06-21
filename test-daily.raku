@@ -1,6 +1,7 @@
 #!/usr/bin/env raku
 use Cro;
-use JSON::Fast <pretty sorted-keys>;
+use JSON::Pretty;
+
 use lib "./lib";
 use FinanceAPI;
 use FinanceAPI::Vars;
@@ -12,7 +13,7 @@ my @symbols = ["jagax"];
 my $set = 0;
 my @fo;
 my $interval = "1d";
-my $range     = "max";
+my $range     = "5d";
 while @symbols {
     my @s;
     if @symbols.elems > 10 {

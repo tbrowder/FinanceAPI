@@ -61,19 +61,12 @@ user must obtain a personal API key in order to
 successfully use the full capability of this module to
 get desired data. See the details at L<https://financeapi.net>.
 
-Note the API key obtained must be assigned to the user's
+Note the API key obtained I<must> be assigned to the user's
 environment variable C<FINANCEAPI_APIKEY>. In a Linux OS one could
 do this in the user's C<$HOME/.bash_aliases> file:
 
 =begin code
 export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
-=end code
-
-Then, in any code
-using the API, the key is accessed like this:
-
-=begin code
-my $apikey = %*ENV<FINANCEAPI_APIKEY>;
 =end code
 
 =head1 AUTHOR

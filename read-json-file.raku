@@ -1,5 +1,4 @@
 #!/usr/bin/env raku
-#use JSON::Fast <pretty sorted-keys>;
 use JSON::Pretty;
 
 use lib "./lib";

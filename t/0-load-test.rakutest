@@ -10,7 +10,8 @@ my @modules = <
     FinanceAPI::Options
     FinanceAPI::Quotes
     FinanceAPI::Summaries
-
+    FinanceAPI::Not-Used
+    FinanceAPI::Subs
 >;
 
 plan @modules.elems;

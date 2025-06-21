@@ -18,13 +18,9 @@ DESCRIPTION
 
 **FinanceAPI** has a set of routines to extract financial data from various markets around the world using their APIs. There is a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [https://financeapi.net](https://financeapi.net).
 
-Note the API key obtained must be assigned to the user's environment variable `FINANCEAPI_APIKEY`. In a Linux OS one could do this in the user's `$HOME/.bash_aliases` file:
+Note the API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. In a Linux OS one could do this in the user's `$HOME/.bash_aliases` file:
 
     export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
-
-Then, in any code using the API, the key is accessed like this:
-
-    my $apikey = %*ENV<FINANCEAPI_APIKEY>;
 
 AUTHOR
 ======
