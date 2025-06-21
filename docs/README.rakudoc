@@ -62,8 +62,20 @@ successfully use the full capability of this module to
 get desired data. See the details at L<https://financeapi.net>.
 
 Note the API key obtained must be assigned to the user's
-environment variable C<FINANECAPI_KEY>. Then, in any code
-using the API, the key is accessed as C<%*ENV('FINANCEAPI_API')>.
+environment variable C<FINANCEAPI_KEY>. In a Linux OS one could
+do this in the user's C<$HOME/.bash_aliases> file:
+
+=begin code
+export FINANCEAPI_KEY='dEfvhygSrfbFttgyhjfe3huj'
+=end code
+
+Then, in any code
+using the API, the key is accessed like this:
+
+=begin code
+my $apikey = %*ENV('FINANCEAPI_KEY');
+my $apikey = %*ENV<FINANCEAPI_KEY>;
+=end code
 
 =head1 AUTHOR
 
