@@ -23,8 +23,8 @@ sub from-timestamp(
 sub inspect-json(
     # $data is output from 'from-json $json-string'
     # often a plain Hash, but not always.
-    $data, 
-    $indent = 0;
+    $data,
+    $indent = 0,
     :$debug,
     ) is export {
     my $prefix = " " x $indent;
@@ -105,6 +105,4 @@ sub extract-json-data(
     :$debug,
     ) is export {
     # parent of (i,e., uses) sub inspect-json
-    
 }
-
