@@ -18,11 +18,11 @@ DESCRIPTION
 
 **FinanceAPI** has a set of routines to extract financial data from various markets around the world using their APIs. There is a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [https://financeapi.net](https://financeapi.net).
 
-Note the API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. On a Linux OS one can do this in the user's `$HOME/.bash_aliases` file:
+Yhe API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. On a Linux OS host, one can do this in the user's `$HOME/.bash_aliases` file:
 
     export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 
-Note tests in /t do not need an API key, but tests in /xt do.
+Note tests in directory '/t' **do not** need an API key, but tests in directory '/xt' **do**.
 
 Local data location and use
 ---------------------------
@@ -43,13 +43,23 @@ where:
 
 ### CSV table formats
 
+All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which currenly are:
+
+**s**
+
+Sell
+
+**b**
+
+buy
+
 Daily
 
-    Date | Symbol | Close
+    Date | Symbol | Close ($currency/share)
 
 Event
 
-    Date | Symbol | Event | Notes
+    Date | Symbol | Event | Amount ($currency/share) | Notes
 
 Current status
 --------------

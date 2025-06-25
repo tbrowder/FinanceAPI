@@ -60,15 +60,16 @@ user must obtain a personal API key in order to
 successfully use the full capability of this module to
 get desired data. See the details at L<https://financeapi.net>.
 
-Note the API key obtained I<must> be assigned to the user's
-environment variable C<FINANCEAPI_APIKEY>. On a Linux OS one can
-do this in the user's C<$HOME/.bash_aliases> file:
+Yhe API key obtained I<must> be assigned to the user's
+environment variable C<FINANCEAPI_APIKEY>. On a Linux OS host,
+one can do this in the user's C<$HOME/.bash_aliases> file:
 
 =begin code
 export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 =end code
 
-Note tests in /t do not need an API key, but tests in /xt do.
+Note tests in directory '/t' B<do not>  need an API key, but tests in 
+directory '/xt' B<do>.
 
 =head2 Local data location and use
 
@@ -97,6 +98,16 @@ C<$symbol> - the market symbol for the security, e.g., 'JAGIX', 'MRK'
 C<$table-type> - the query type, e.g., 'daily', 'event'
 
 =head3 CSV table formats
+
+All tables are kept in date order from earliest to latest. For those tables
+that may have multiple events on the same day, the second key is the event
+type which currenly are:
+
+=defn s
+Sell
+
+=defn b
+buy
 
 Daily
 

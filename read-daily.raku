@@ -17,7 +17,7 @@ multi MAIN() {
     HERE
 }
 
-constant our %daily-subkeys is export = %(
+constant %daily-subkeys is export = %(
     # these are used:
     close => "",
     symbol => "",
