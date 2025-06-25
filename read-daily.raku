@@ -3,19 +3,21 @@
 use JSON::Pretty;
 use FinanceAPI;
 use FinanceAPI::Subs;
+use FinanceAPI::Vars;
+use FinanceAPI::Security;
 
 multi MAIN() {
     print qq:to/HERE/;
-    Given a 'daily' file produced by exercising this package,
-      show or process its contents.
-    It should be in this form:
+    Given a 'daily' JSON file produced by using its query exercising this package,
+      show or process its JSON contents.
+    Output data should be in this form:
 
-       symbol date close
+       symbol, date (yyyy-mm-dd), close (currency/share)
 
     HERE
 }
 
-my %daily-subkeys = %(
+constant our %daily-subkeys is export = %(
     # these are used:
     close => "",
     symbol => "",

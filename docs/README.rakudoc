@@ -101,13 +101,13 @@ C<$table-type> - the query type, e.g., 'daily', 'event'
 Daily
 
 =begin code
-Date | Symbol | Close
+Date | Symbol | Close ($currency/share)
 =end code
 
 Event
 
 =begin code
-Date | Symbol | Event | Notes
+Date | Symbol | Event | Amount ($currency/share) | Notes
 =end code
 
 =head2 Current status
