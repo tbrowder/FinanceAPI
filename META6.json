@@ -6,8 +6,6 @@
   "build-depends": [
   ],
   "depends": [
-    "JSON::ToCSV",
-    "CSV::ToSQLite",
     "File::Find",
     "Cro",
     "Cro::HTTP::Client",
@@ -19,13 +17,8 @@
   "perl": "6.d",
   "provides": {
     "FinanceAPI": "lib/FinanceAPI.rakumod",
-    "FinanceAPI::Charts": "lib/FinanceAPI/Charts.rakumod",
-    "FinanceAPI::Classes": "lib/FinanceAPI/Classes.rakumod",
-    "FinanceAPI::Dailies": "lib/FinanceAPI/Dailies.rakumod",
-    "FinanceAPI::Options": "lib/FinanceAPI/Options.rakumod",
-    "FinanceAPI::Quotes": "lib/FinanceAPI/Quotes.rakumod",
+    "FinanceAPI::Security": "lib/FinanceAPI/Security.rakumod",
     "FinanceAPI::Subs": "lib/FinanceAPI/Subs.rakumod",
-    "FinanceAPI::Summaries": "lib/FinanceAPI/Summaries.rakumod",
     "FinanceAPI::Vars": "lib/FinanceAPI/Vars.rakumod"
   },
   "resources": [

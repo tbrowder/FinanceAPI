@@ -18,18 +18,43 @@ DESCRIPTION
 
 **FinanceAPI** has a set of routines to extract financial data from various markets around the world using their APIs. There is a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [https://financeapi.net](https://financeapi.net).
 
-Note the API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. In a Linux OS one could do this in the user's `$HOME/.bash_aliases` file:
+Note the API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. On a Linux OS one can do this in the user's `$HOME/.bash_aliases` file:
 
     export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 
 Note tests in /t do not need an API key, but tests in /xt do.
 
+Local data location and use
+---------------------------
+
+Currently, data are output to CSV tables, one uniquely named file per security `symbol` (also known as `ticker`). (Note an SQLite database is a desirable possibility for the future, PRs welcome!).
+
+The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Existing data tables are first read and checked to ensure only new data are appended.
+
+The CSV table file naming format:
+
+    {$data-directory}/{$symbol}-{$table-type}.csv
+
+where:
+
+`$symbol` - the market symbol for the security, e.g., 'JAGIX', 'MRK'
+
+`$table-type` - the query type, e.g., 'daily', 'event'
+
+### CSV table formats
+
+Daily
+
+    Date | Symbol | Close
+
+Event
+
+    Date | Symbol | Event | Notes
+
 Current status
 --------------
 
 The following query paths and their routines are currently available. Given the ticker symbol of a security of interest, we can use it as a key to the hashes returned by each query to output the data in any desired format.
-
-Currently the data are output to CSV tables, one uniquely named file per table, including a Posix timestamp. The table formats are copyied from those found in the authors digital records downloaded manually from Yahoo Finance. (An SQLite database format is a desirable possibility for the future, PRs welcome!).
 
 ### Daily closing prices of securities
 
@@ -39,15 +64,11 @@ Currently the data are output to CSV tables, one uniquely named file per table, 
 
   * path
 
-### Details of the management and financials of a security
-
-  * path
-
 Other query paths are defined on the [FinanceAPI](https://financeapi.net) website, but they have not yet been handled. File an issue or, better yet, submit a PR if you want others.
 
 Their default values should give usable data for the past six months. Their default values are set for the author's convenience for testing the free tier:
 
-`EN` languageavailable
+`EN` language `US` region
 
 AUTHOR
 ======

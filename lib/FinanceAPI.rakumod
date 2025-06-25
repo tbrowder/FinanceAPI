@@ -5,7 +5,7 @@ use Cro::HTTP::Client;
 use JSON::Pretty;
 
 use FinanceAPI::Vars;
-use FinanceAPI::Classes;
+use FinanceAPI::Security;
 use FinanceAPI::Subs;
 
 # security

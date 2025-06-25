@@ -1,17 +1,20 @@
 use Test;
 
-my @modules = <
-    FinanceAPI
-    FinanceAPI::Classes
-    FinanceAPI::Vars
+my @modules = [
+    'FinanceAPI',
+    'FinanceAPI::Vars',
+    'FinanceAPI::Subs',
 
-    FinanceAPI::Charts
-    FinanceAPI::Dailies
-    FinanceAPI::Options
-    FinanceAPI::Quotes
-    FinanceAPI::Summaries
-    FinanceAPI::Subs
->;
+    =begin comment
+    # for 	now in ../lib-unused'
+    'FinanceAPI::Classes',
+    'FinanceAPI::Charts',
+    'FinanceAPI::Dailies',
+    'FinanceAPI::Options',
+    'FinanceAPI::Quotes',
+    'FinanceAPI::Summaries',
+    =end comment
+];
 
 plan @modules.elems;
 

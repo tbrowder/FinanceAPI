@@ -41,24 +41,28 @@ multi MAIN(
     
     say "DEBUG: reading JSON file '$jfile'" if 1 or $debug;
     my %h0 = from-json $jfile.IO.slurp;
-    for %h0.kv -> $k, $v {
-        # k is symbol, uppercase it
-        # v can be a Str or an Array
-        my $sym = $k.uc;
-        say "  DEBUG: key: '$k'" if 1 or $debug;
-        unless $v ~~ Hash {
-            say "FATAL: Expected a Hash, but got a '{$v.^name}'";
+    for %h0.kv -> $k0, $v0 {
+        # k0 is symbol, uppercase it
+        # v0 can be a Str or an Array
+        my $sym = $k0.uc;
+        say "  DEBUG: key: '$k0'" if 0 or $debug;
+        unless $v0 ~~ Hash {
+            say "FATAL: Expected a Hash, but got a '{$v0.^name}'";
             exit;
         }
 
         my %h1;
-        for $v.kv -> $k1, $v1 {
-            say "    DEBUG: key: '$k1'" if 1 or $debug;
+        for $v0.kv -> $k1, $v1 {
+            say "    DEBUG: key: '$k1'" if 0 or $debug;
             unless %daily-subkeys{$k1}:exists {
                 say "FATAL: Unexpected daily subkey '$k1'";
                 exit;
             }
             next if %daily-subkeys{$k1} == -1;
+            # check the type of value
+            my $typ = $v1.^name;
+            say "    DEBUG: key: '$k1', value type: '$typ'" if 1 or $debug;
+            %h1{$k1} = $v1;
         }
     }
 }

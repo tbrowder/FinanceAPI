@@ -1,7 +1,7 @@
 use Test;
 
 use FinanceAPI;
-use FinanceAPI::Dailies;
+use FinanceAPI::Security;
 
 is 1, 1;
 
