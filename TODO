@@ -10,7 +10,7 @@ For free tier, these work:
     interval: 1d
     symbols 1..10: mrk, jagix
 
-  /v8/finance/chart/{ticker}
+  /v8/finance/chart/{ticker}  # events, one symbol only
     1 symbol per query
     range: 6mo
     interval: 1d

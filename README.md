@@ -27,15 +27,23 @@ Note tests in /t do not need an API key, but tests in /xt do.
 Current status
 --------------
 
-The following three query paths and their routines are currently available.
+The following query paths and their routines are currently available. Given the ticker symbol of a security of interest, we can use it as a key to the hashes returned by each query to output the data in any desired format.
 
-  * ?
+Currently the data are output to CSV tables, one uniquely named file per table, including a Posix timestamp. The table formats are copyied from those found in the authors digital records downloaded manually from Yahoo Finance. (An SQLite database format is a desirable possibility for the future, PRs welcome!).
 
-  * ?
+### Daily closing prices of securities
 
-  * ?
+  * path
 
-Other query paths are defined the Financeapi.net website, but they have not yet been handled. File an issue or, better yet, submit a PR if you want others.
+### Dividend and split dates and amounts
+
+  * path
+
+### Details of the management and financials of a security
+
+  * path
+
+Other query paths are defined on the [FinanceAPI](https://financeapi.net) website, but they have not yet been handled. File an issue or, better yet, submit a PR if you want others.
 
 Their default values should give usable data for the past six months. Their default values are set for the author's convenience for testing the free tier:
 

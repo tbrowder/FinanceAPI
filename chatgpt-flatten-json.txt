@@ -1,0 +1,545 @@
+To convert a JSON file to CSV in Raku, you need to:
+
+Read and decode the JSON file.
+
+Normalize the data (especially if it's nested).
+
+Write it out in CSV format.
+
+Here's a full example that works for an array of flat JSON objects
+(e.g., a list of records like in a database).
+
+Example JSON (data.json)
+
+[
+  { "name": "Alice", "age": 30, "city": "New York" },
+  { "name": "Bob", "age": 25, "city": "Los Angeles" },
+  { "name": "Charlie", "age": 35, "city": "Chicago" }
+]
+
+Raku Code to Convert JSON → CSV
+
+use JSON::Fast;
+
+# Load and decode JSON
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Ensure it's an Array of Hashes
+die "Expected an array of objects" unless $data ~~ Array && $data[0] ~~ Hash;
+
+# Extract headers from the first item
+my @headers = $data[0].keys.sort;
+
+# Open CSV file for writing
+spurt 'output.csv', @headers.join(',') ~ "\n";
+
+for $data -> %row {
+    my @values = @headers.map({ %row{$_} // '' });  # Default to empty string
+    spurt 'output.csv', @values.join(',') ~ "\n", :append;
+}
+
+Resulting output.csv
+
+age,city,name
+30,New York,Alice
+25,Los Angeles,Bob
+35,Chicago,Charlie
+
+
+
+Notes
+This assumes flat JSON (no nested objects or arrays inside the records).
+
+For nested JSON, you’d need to flatten the data (e.g., address.city → address.city).
+
+You can customize the delimiter, add quoting, etc., depending on your CSV requirements.
+
+Great! Here's how you can convert nested JSON to CSV in Raku, by flattening the structure first.
+
+Goal
+Turn nested JSON like this:
+
+
+[
+  {
+    "name": "Alice",
+    "age": 30,
+    "address": {
+      "city": "New York",
+      "zip": "10001"
+    }
+  },
+  {
+    "name": "Bob",
+    "age": 25,
+    "address": {
+      "city": "Los Angeles",
+      "zip": "90001"
+    }
+  }
+]
+
+Into a CSV like this:
+
+age,address.city,address.zip,name
+30,New York,10001,Alice
+25,Los Angeles,90001,Bob
+
+Full Raku Code
+
+use JSON::Fast;
+
+# Flatten a nested hash into dot-separated keys
+sub flatten(%hash, $prefix = '') {
+    my %flat;
+    for %hash.kv -> $key, $value {
+        my $full-key = $prefix ~~ '' ?? $key !! "$prefix.$key";
+        given $value {
+            when Hash {
+                %flat.append: flatten($value, $full-key);
+            }
+            when Array {
+                # Optional: serialize arrays as JSON or join with ';'
+                %flat{$full-key} = $value.join(';');
+            }
+            default {
+                %flat{$full-key} = $value;
+            }
+        }
+    }
+    return %flat;
+}
+
+# Load and parse JSON
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Ensure we have an array of hashes
+die "Expected array of JSON objects" unless $data ~~ Array;
+
+# Flatten each row
+my @flat-rows = $data.map({ flatten($_) });
+
+# Collect all unique headers
+my @headers = @flat-rows.map(*.keys).flat.unique.sort;
+
+# Write CSV
+my $out = @headers.join(',') ~ "\n";
+for @flat-rows -> %row {
+    my @values = @headers.map({ %row{$_} // '' });
+    $out ~= @values.map(*.Str).join(',') ~ "\n";
+}
+
+spurt 'output.csv', $out;
+say "CSV written to output.csv";
+
+Features
+Handles nested hashes via dot.notation.
+
+Serializes arrays (you can customize).
+
+Handles missing fields by filling in blanks.
+
+To handle deeply nested arrays in JSON (e.g. where arrays contain objects and should result in multiple rows in CSV), you need to:
+
+Flatten each object.
+
+Expand nested arrays into multiple rows—this is called denormalization.
+
+[
+  {
+    "name": "Alice",
+    "projects": [
+      { "title": "Alpha", "year": 2020 },
+      { "title": "Beta", "year": 2021 }
+    ]
+  },
+  {
+    "name": "Bob",
+    "projects": [
+      { "title": "Gamma", "year": 2022 }
+    ]
+  }
+]
+
+Desired CSV Output:
+
+name,projects.title,projects.year
+Alice,Alpha,2020
+Alice,Beta,2021
+Bob,Gamma,2022
+
+Full Raku Code (with Deep Array Expansion)
+
+use JSON::Fast;
+
+# Recursively flatten a nested hash into dot.notation keys
+sub flatten(%data, $prefix = '') {
+    my @rows;
+    my %flat;
+    for %data.kv -> $key, $value {
+        my $full-key = $prefix ~~ '' ?? $key !! "$prefix.$key";
+        given $value {
+            when Hash {
+                %flat.append: flatten($value, $full-key)[0];
+            }
+            when Array {
+                # Denormalize: each array element becomes a separate row
+                my @subrows = $value.map({
+                    flatten($_, $full-key)[0]
+                });
+
+                # Combine current flat state with each row in array
+                for @subrows -> %sub {
+                    my %combined = %flat.clone;
+                    %combined.append: %sub;
+                    @rows.push: %combined;
+                }
+
+                return @rows if @rows;
+            }
+            default {
+                %flat{$full-key} = $value;
+            }
+        }
+    }
+    return [%flat];
+}
+
+# Read and decode JSON
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Accumulate all flattened rows
+my @all-rows;
+for $data -> %entry {
+    @all-rows.append: flatten(%entry);
+}
+
+# Collect all unique headers
+my @headers = @all-rows.map(*.keys).flat.unique.sort;
+
+# Write CSV
+my $csv = @headers.join(',') ~ "\n";
+for @all-rows -> %row {
+    my @values = @headers.map({ %row{$_} // '' });
+    $csv ~= @values.join(',') ~ "\n";
+}
+
+spurt 'output.csv', $csv;
+say "CSV written to output.csv";
+
+📌 Notes
+This handles objects that contain arrays of objects and expands them into multiple CSV rows.
+
+Each array element is paired with its parent data.
+
+You can extend it to handle arrays within arrays by recursive flattening + index tagging (e.g. projects[0].tasks[0].title).
+
+Thanks! Here's a version that preserves array indices in keys (e.g., projects.0.title, projects.1.year) rather than expanding them into multiple rows.
+
+This is useful when:
+
+You want one row per top-level object
+
+You want to flatten nested arrays, but not denormalize into multiple rows
+
+✅ Desired Output (Preserving Indices)
+For this JSON:
+
+[
+  {
+    "name": "Alice",
+    "projects": [
+      { "title": "Alpha", "year": 2020 },
+      { "title": "Beta", "year": 2021 }
+    ]
+  },
+  {
+    "name": "Bob",
+    "projects": [
+      { "title": "Gamma", "year": 2022 }
+    ]
+  }
+]
+
+You get this CSV:
+
+name,projects.0.title,projects.0.year,projects.1.title,projects.1.year
+Alice,Alpha,2020,Beta,2021
+Bob,Gamma,2022,,
+
+🧪 Raku Code – Flatten With Array Indices in Keys
+
+use JSON::Fast;
+
+# Flatten deeply nested structure (array indices in keys)
+sub flatten($data, $prefix = '') {
+    my %flat;
+
+    given $data {
+        when Hash {
+            for $data.kv -> $key, $value {
+                %flat.append: flatten($value, $prefix ~~ '' ?? $key !! "$prefix.$key");
+            }
+        }
+        when Array {
+            for $data.kv -> $idx, $value {
+                %flat.append: flatten($value, "$prefix.$idx");
+            }
+        }
+        default {
+            %flat{$prefix} = $data;
+        }
+    }
+
+    return %flat;
+}
+
+# Load JSON from file
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Flatten each top-level record
+my @flat-rows = $data.map({ flatten($_) });
+
+# Get all unique keys for headers
+my @headers = @flat-rows.map(*.keys).flat.unique.sort;
+
+# Build CSV
+my $csv = @headers.join(',') ~ "\n";
+for @flat-rows -> %row {
+    my @values = @headers.map({ %row{$_} // '' });
+    $csv ~= @values.join(',') ~ "\n";
+}
+
+spurt 'output.csv', $csv;
+say "CSV written to output.csv";
+
+📝 Summary of Behaviors
+Variant	Output Style
+Denormalized	Multiple rows per array element
+Indexed Flatten	One row per object; keys include array index
+
+✅ Enhanced Features
+Preserve array indices (like projects.0.title)
+
+One row per top-level object
+
+Optionally annotate types (like name:str, projects.0.year:int)
+
+Escape strings properly for CSV (handle commas, quotes)
+
+Customizable key style (projects_0_title vs projects.0.title)
+
+🧪 Full Enhanced Raku Code
+
+use JSON::Fast;
+
+# Config options
+my $use-dot-notation = False;     # If False, use underscores: projects_0_title
+my $include-type-annotations = True;
+
+# Helper to escape CSV fields
+sub escape-csv($value) {
+    return '' unless defined $value;
+    my $s = $value.Str;
+    $s ~~ s:g/\"/""/;               # escape quotes
+    return $s ~~ /["," \n]/ ?? "\"$s\"" !! $s;
+}
+
+# Flatten JSON structure with type annotation and index control
+sub flatten($data, $prefix = '') {
+    my %flat;
+
+    given $data {
+        when Hash {
+            for $data.kv -> $key, $value {
+                my $new-key = $prefix ~~ ''
+                    ?? $key
+                    !! $use-dot-notation
+                        ?? "$prefix.$key"
+                        !! "$prefix" ~ '_' ~ "$key";
+                %flat.append: flatten($value, $new-key);
+            }
+        }
+        when Array {
+            for $data.kv -> $idx, $value {
+                my $new-key = $prefix ~ ($use-dot-notation ?? ".$idx" !! "_$idx");
+                %flat.append: flatten($value, $new-key);
+            }
+        }
+        default {
+            my $type = $include-type-annotations
+                ?? ':' ~ $data.^name.lc
+                !! '';
+            %flat{$prefix ~ $type} = $data;
+        }
+    }
+
+    return %flat;
+}
+
+# Load JSON from file
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Flatten each top-level object
+my @flat-rows = $data.map({ flatten($_) });
+
+# Collect all unique headers
+my @headers = @flat-rows.map(*.keys).flat.unique.sort;
+
+# Build CSV output
+my $csv = @headers.join(',') ~ "\n";
+for @flat-rows -> %row {
+    my @values = @headers.map({ escape-csv(%row{$_} // '') });
+    $csv ~= @values.join(',') ~ "\n";
+}
+
+spurt 'output.csv', $csv;
+say "Enhanced CSV written to output.csv";
+
+🔧 Example Header Output With Config
+If:
+
+use-dot-notation = False
+
+include-type-annotations = True
+
+Then you get:
+
+name:str,projects_0_title:str,projects_0_year:int,projects_1_title:str,projects_1_year:int
+Alice,Alpha,2020,Beta,2021
+Bob,Gamma,2022,,
+
+✅ Benefits
+Feature	Value
+Safe CSV	Handles quotes, commas
+Readable headers	Choose dot or underscore
+Type hints	:str, :int, etc.
+Extendable	Easy to add filtering, sorting, etc.
+
+✅ Advanced Features
+Feature	Description
+✅ Deep flattening	Recursively flatten nested arrays/objects of any depth
+✅ Configurable key styles	Use dot a.b[0].c or underscore a_b_0_c format
+✅ Type annotations (optional)	Add :str, :int, etc. to column headers
+✅ Key filtering (optional)	Include only keys matching regex or list
+✅ Safe CSV output	Escapes commas, quotes, newlines properly
+
+🔧 Configurable Code
+
+use JSON::Fast;
+
+# CONFIGURATION
+my $use-dot-notation        = True;
+my $include-type-annotations = True;
+my $key-filter              = Nil;  # Regex or list of key patterns (e.g., rx/^name|project/ or <name projects_0_year>)
+
+# CSV-safe field escape
+sub escape-csv($v) {
+    return '' unless defined $v;
+    my $s = $v.Str;
+    $s ~~ s:g/\"/""/;
+    return $s ~~ /[",\n]/ ?? "\"$s\"" !! $s;
+}
+
+# Recursive flattener
+sub flatten($data, $prefix = '') {
+    my %flat;
+
+    given $data {
+        when Hash {
+            for $data.kv -> $k, $v {
+                my $newkey = $prefix eq ''
+                    ?? $k
+                    !! $use-dot-notation
+                        ?? "$prefix.$k"
+                        !! "$prefix" ~ '_' ~ $k;
+                %flat.append: flatten($v, $newkey);
+            }
+        }
+        when Array {
+            for $data.kv -> $i, $v {
+                my $newkey = $prefix ~ ($use-dot-notation ?? ".{$i}" !! "_$i");
+                %flat.append: flatten($v, $newkey);
+            }
+        }
+        default {
+            my $type = $include-type-annotations
+                ?? ':' ~ $data.^name.lc
+                !! '';
+            %flat{$prefix ~ $type} = $data;
+        }
+    }
+
+    return %flat;
+}
+
+# Optional key filtering
+sub filter-keys(@keys) {
+    return @keys if !$key-filter;
+    return @keys.grep: {
+        when Regex { $_ ~~ $key-filter }
+        when Array { $key-filter.grep({ $_ eq $^k }) }
+        default { True }
+    }
+}
+
+# Load & parse
+my $json-text = slurp 'data.json';
+my $data = from-json($json-text);
+
+# Flatten all entries
+my @rows = $data.map({ flatten($_) });
+
+# Generate header set
+my @headers = filter-keys(@rows.map(*.keys).flat.unique.sort);
+
+# Build CSV
+my $csv = @headers.join(',') ~ "\n";
+for @rows -> %row {
+    my @values = @headers.map({ escape-csv(%row{$_} // '') });
+    $csv ~= @values.join(',') ~ "\n";
+}
+
+spurt 'output.csv', $csv;
+say "Advanced CSV written to output.csv";
+
+🔍 Example Options You Can Set:
+
+To include only top-level and project keys:
+
+my $key-filter = rx/^name|projects/;
+
+To match a specific key set:
+
+my $key-filter = <name projects_0_year projects_1_year>;
+
+To remove type annotations:
+
+my $include-type-annotations = False;
+
+🔄 Example Flattened Keys
+Nested like this:
+
+{
+  "person": {
+    "name": "Alice",
+    "projects": [
+      { "title": "A" },
+      { "title": "B" }
+    ]
+  }
+}
+
+Becomes:
+
+person.name:str,person.projects.0.title:str,person.projects.1.title:str
+
+
+Or with underscore config:
+
+person_name:str,person_projects_0_title:str,person_projects_1_title:str

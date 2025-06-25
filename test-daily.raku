@@ -7,7 +7,7 @@ use FinanceAPI;
 
 my ($fo, $res, %h, $fh, $jstr);
 
-my @symbols = ["jagix", "mrk"];
+my @symbols = ["JAGIX", "MRK"];
 my $dir = "test-jsons".IO;
 
 my @fo;

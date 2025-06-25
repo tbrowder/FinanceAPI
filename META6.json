@@ -6,12 +6,12 @@
   "build-depends": [
   ],
   "depends": [
+    "JSON::ToCSV",
+    "CSV::ToSQLite",
     "File::Find",
-    "Hash2Class",
     "Cro",
     "Cro::HTTP::Client",
-    "JSON::Pretty",
-    "JSON::Path"
+    "JSON::Pretty"
   ],
   "description": "Provides routines for querying securities information using 'https://Financeapi.net'",
   "license": "Artistic-2.0",
@@ -22,8 +22,6 @@
     "FinanceAPI::Charts": "lib/FinanceAPI/Charts.rakumod",
     "FinanceAPI::Classes": "lib/FinanceAPI/Classes.rakumod",
     "FinanceAPI::Dailies": "lib/FinanceAPI/Dailies.rakumod",
-    "FinanceAPI::ExtractJSON": "lib/FinanceAPI/ExtractJSON.rakumod",
-    "FinanceAPI::Not-Used": "lib/FinanceAPI/Not-Used.rakumod",
     "FinanceAPI::Options": "lib/FinanceAPI/Options.rakumod",
     "FinanceAPI::Quotes": "lib/FinanceAPI/Quotes.rakumod",
     "FinanceAPI::Subs": "lib/FinanceAPI/Subs.rakumod",

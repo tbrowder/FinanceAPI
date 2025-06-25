@@ -1,0 +1,138 @@
+=begin comment
+
+🛠️ json2csv.raku — Raku CLI Tool
+🔧 Features
+CLI options: input file, output file
+
+Flags to control:
+
+Key style (--dot or --underscore)
+
+Type annotations (--no-types)
+
+Key filtering (--filter)
+
+Safe CSV escaping
+
+Deeply nested JSON flattening with arrays
+
+📄 Full Script: json2csv.raku
+
+=end comment
+
+#!/usr/bin/env raku
+use JSON::Fast;
+use Getopt::Long;
+
+# CLI options
+my $input     = '';
+my $output    = 'output.csv';
+my $use-dot   = False;
+my $with-types = True;
+my @filters;
+
+# Parse command-line args
+GetOptions(
+  'input=s'      => \$input,
+  'output=s'     => \$output,
+  'dot'          => \$use-dot,
+  'underscore'   => sub { $use-dot = False },
+  'no-types'     => sub { $with-types = False },
+  'filter=s%'    => -> %f { @filters = %f.keys }
+);
+
+# Usage message
+unless $input {
+  say q:to/END/;
+Usage: json2csv.raku --input=data.json [--output=out.csv] [--dot|--underscore] [--no-types] [--filter=key1] [--filter=key2]
+  --input        Input JSON file
+  --output       Output CSV file (default: output.csv)
+  --dot          Use dot.notation (default if --underscore is not passed)
+  --underscore   Use underscore_notation
+  --no-types     Do not annotate CSV column headers with types
+  --filter       Include only specified keys (repeatable)
+END
+  exit 1;
+}
+
+# Escape CSV-safe values
+sub escape-csv($v) {
+    return '' unless defined $v;
+    my $s = $v.Str;
+    $s ~~ s:g/\"/""/;
+    return $s ~~ /[",\n]/ ?? "\"$s\"" !! $s;
+}
+
+# Flatten deeply nested structure
+sub flatten($data, $prefix = '') {
+    my %flat;
+
+    given $data {
+        when Hash {
+            for $data.kv -> $k, $v {
+                my $key = $prefix eq ''
+                    ?? $k
+                    !! $use-dot
+                        ?? "$prefix.$k"
+                        !! "$prefix" ~ '_' ~ $k;
+                %flat.append: flatten($v, $key);
+            }
+        }
+        when Array {
+            for $data.kv -> $i, $v {
+                my $key = "$prefix" ~ ($use-dot ?? ".{$i}" !! "_$i");
+                %flat.append: flatten($v, $key);
+            }
+        }
+        default {
+            my $type = $with-types ?? ':' ~ $data.^name.lc !! '';
+            %flat{$prefix ~ $type} = $data;
+        }
+    }
+
+    return %flat;
+}
+
+# Optional key filtering
+sub filter-keys(@keys) {
+    return @keys unless @filters;
+    return @keys.grep({ @filters.any: * eq $_ });
+}
+
+# Load and parse
+my $json-text = slurp $input;
+my $data = from-json($json-text);
+
+# Validate
+die "Expected top-level array of objects\n" unless $data ~~ Array;
+
+# Flatten all rows
+my @rows = $data.map({ flatten($_) });
+
+# Collect headers
+my @headers = filter-keys(@rows.map(*.keys).flat.unique.sort);
+
+# Build CSV
+my $csv = @headers.join(',') ~ "\n";
+for @rows -> %row {
+    my @values = @headers.map({ escape-csv(%row{$_} // '') });
+    $csv ~= @values.join(',') ~ "\n";
+}
+
+# Save output
+spurt $output, $csv;
+say "✅ CSV written to $output";
+
+=begin comment
+🧪 Example Usage
+
+=end comment
+
+# Basic usage
+json2csv.raku --input=data.json
+
+# Use dot notation and remove types
+json2csv.raku --input=data.json --dot --no-types
+
+# Use filters
+json2csv.raku --input=data.json --filter=name --filter=projects_0_year

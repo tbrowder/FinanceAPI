@@ -1,0 +1,46 @@
+{
+  "jagix" : {
+    "close" : [
+      72.47,
+      73.26,
+      72.79,
+      72.63,
+      72.63
+    ],
+    "end" : null,
+    "start" : null,
+    "symbol" : "JAGIX",
+    "dataGranularity" : 300,
+    "timestamp" : [
+      1749821400,
+      1750080600,
+      1750167000,
+      1750253400,
+      1750426200
+    ],
+    "previousClose" : null,
+    "chartPreviousClose" : 73.45
+  },
+  "mrk" : {
+    "timestamp" : [
+      1749821400,
+      1750080600,
+      1750167000,
+      1750253400,
+      1750426200
+    ],
+    "previousClose" : null,
+    "dataGranularity" : 300,
+    "start" : null,
+    "end" : null,
+    "symbol" : "MRK",
+    "close" : [
+      81.71,
+      80.96,
+      78.28,
+      79.29,
+      79.06
+    ],
+    "chartPreviousClose" : 81.82
+  }
+}
