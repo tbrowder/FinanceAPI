@@ -39,24 +39,19 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
 
     # keys are the security symbols (tickers)
     my %portfolio = %(
-        \# mandatory:
-        MRK => { \# the ticker symbol for queries
-            type   => "security type", \# stock, fund, option
-            # required but may be left empty
+        MRK => {
+            type   => "security type",
             lots => {
-                \# use your own lot key style as desired
                 idl => {
                     buy-date => "yyyy-mm-dd",
                     buy-total-price => 420.25,
                     number-shares   => 40.0,
-                    sell-date => "", \# format if sold: yyyy-mm-dd
-                    sell-total-price => "", \# format if sold: 420.25
+                    sell-date => "", 
+                    sell-total-price => "", 
 
                 },
-                \# etc.
             },
         },
-        \# etc, one hash entry per security
     );
 
 2. Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
