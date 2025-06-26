@@ -79,8 +79,8 @@ directory '/xt' B<do>.
 
 =head2 Local data location and use
 
-Currently, data are output to CSV tables, one uniquely named
-file per security C<symbol> (also known as C<ticker>).
+Currently, data are utimately output to CSV tables, uniquely named
+file per security C<symbol> (also known as C<ticker>) and content type.
 (Note an SQLite database is a desirable possibility for the future, PRs welcome!).
 
 =head3 General process

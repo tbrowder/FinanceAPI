@@ -31,7 +31,7 @@ Note tests in directory '/t' **do not** need an API key, but tests in directory 
 Local data location and use
 ---------------------------
 
-Currently, data are output to CSV tables, one uniquely named file per security `symbol` (also known as `ticker`). (Note an SQLite database is a desirable possibility for the future, PRs welcome!).
+Currently, data are utimately output to CSV tables, uniquely named file per security `symbol` (also known as `ticker`) and content type. (Note an SQLite database is a desirable possibility for the future, PRs welcome!).
 
 ### General process
 
