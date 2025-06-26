@@ -4,6 +4,7 @@ my @modules = [
     'FinanceAPI',
     'FinanceAPI::Vars',
     'FinanceAPI::Subs',
+    'FinanceAPI::Yahoo',
 
     =begin comment
     # for 	now in ../lib-unused'

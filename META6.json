@@ -19,12 +19,14 @@
     "FinanceAPI": "lib/FinanceAPI.rakumod",
     "FinanceAPI::Security": "lib/FinanceAPI/Security.rakumod",
     "FinanceAPI::Subs": "lib/FinanceAPI/Subs.rakumod",
-    "FinanceAPI::Vars": "lib/FinanceAPI/Vars.rakumod"
+    "FinanceAPI::Vars": "lib/FinanceAPI/Vars.rakumod",
+    "FinanceAPI::Yahoo": "lib/FinanceAPI/Yahoo.rakumod"
   },
   "resources": [
   ],
   "source-url": "https://github.com/tbrowder/FinanceAPI.git",
   "tags": [
+    "finance yahoo stocks mutual-funds options market data"
   ],
   "test-depends": [
   ],
