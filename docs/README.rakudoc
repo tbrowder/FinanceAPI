@@ -97,7 +97,6 @@ my %portfolio = %(
         type   => "security type", # stock, fund, option
         # required but may be left empty
         lots => {
-            =begin comment
             # use your own lot key style as desired
             idl => {
                 buy-date => "yyyy-mm-dd",
@@ -108,7 +107,6 @@ my %portfolio = %(
             
             },
             # etc.
-            =end comment
         },
     },
     # etc, one hash entry per security

@@ -44,7 +44,6 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
             type   => "security type", # stock, fund, option
             # required but may be left empty
             lots => {
-                =begin comment
                 # use your own lot key style as desired
                 idl => {
                     buy-date => "yyyy-mm-dd",
@@ -55,7 +54,6 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
 
                 },
                 # etc.
-                =end comment
             },
         },
         # etc, one hash entry per security
