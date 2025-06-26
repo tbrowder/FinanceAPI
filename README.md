@@ -35,7 +35,7 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
 
 ### General process
 
-1. Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desisired.
+Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desisired.
 
     my %portfolio = %(
         MRK => {
@@ -53,9 +53,9 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
         },
     );
 
-2. Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
+Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
 
-3. Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
+Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
 
 The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Under the data directory are three subdirectories are named `csv-tables`, `query-json-files`, and `archive`.
 
