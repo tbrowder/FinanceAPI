@@ -43,15 +43,21 @@ where:
 
 ### CSV table formats
 
-All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which currenly are:
+All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which are:
 
-**s Sell**
+  * **BU** - Buy
 
+  * **SE** - Sell
 
+  * **SP** - Split
 
-**b**
+  * **DI** - Dividend
 
-buy
+  * **RC** - Return of capital
+
+  * **RS** - Reverse split
+
+  * **SO** - Split
 
 Daily
 

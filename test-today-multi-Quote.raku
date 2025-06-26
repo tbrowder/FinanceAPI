@@ -2,8 +2,8 @@
 use Cro;
 use JSON::Pretty;
 
-# the input file:  test-daily-multi-Spark.raku
-# the output file: test-daily-multi-Spark{1..N}.raku
+# the input file:  test-today-multi-Quote.raku
+# the output file: test-today-multi-Quote{1..N}.json
 
 use lib "./lib";
 use FinanceAPI;
@@ -31,9 +31,9 @@ while @symbols {
     say "dt = '$dt'"; 
     #say "DEBUG exit..."; exit;
 
-    $res = path-v8FinanceSpark @s, :$interval, :$range;
-    # the output file: test-daily-multi-Spark{1..N}.raku
-    $fo = "test-jsons/test-daily-multi-Spark-{$dt}.json";
+    $res = path-v6FinanceQuote @s;
+    # the output file: test-today-multi-Quote{1..N}.raku
+    $fo = "test-jsons/test-today-multi-Spark-{$dt}.json";
     @fo.push: $fo;
     $fo.IO.spurt: $res;
 }

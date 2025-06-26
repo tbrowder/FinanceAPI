@@ -65,7 +65,6 @@ sub path-v6FinanceQuote(
     $body = "(null)" unless $body.chars;
     say $body if $debug;
     $body;
-
 }
 
 sub path-v8FinanceSpark(
