@@ -2,7 +2,7 @@
 
 my %portfolio = %(
     # mandatory:
-    symbol => "MRK", # the ticker symbol for queries
+    MRK => { # the ticker symbol for queries
     type   => "security type", # stock, fund, option
     # required but may be left empty
     lots => {
@@ -20,7 +20,7 @@ my %portfolio = %(
         # etc.
         =end comment
     },
-    
+},    
 );
 
 say $_ for %portfolio.keys;
