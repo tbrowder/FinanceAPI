@@ -53,14 +53,20 @@ use FinanceAPI;
 
 =head1 DESCRIPTION
 
-B<FinanceAPI> has a set of routines to extract financial data
-from various markets around the world using their APIs. There
-is a free tier with a limit of 100 queries per day. The
+The company L<FinanceAPI|https://financeapi.net>
+provides a set of APIs to extract financial data
+from various markets around the world. 
+
+This Raku package provides routines to query the website and manage the
+received data.
+
+The company has a free tier with a limit of 100 queries per day. The
 user must obtain a personal API key in order to
 successfully use the full capability of this module to
-get desired data. See the details at L<https://financeapi.net>.
+get desired data. See the details at 
+L<https://financeapi.net>.
 
-Yhe API key obtained I<must> be assigned to the user's
+The API key obtained I<must> be assigned to the user's
 environment variable C<FINANCEAPI_APIKEY>. On a Linux OS host,
 one can do this in the user's C<$HOME/.bash_aliases> file:
 
@@ -79,8 +85,9 @@ file per security C<symbol> (also known as C<ticker>).
 
 =head3 General process
 
-0. Create a hash of securities you wish to track. The hash must contain
-the following entries, but the user can add more if desisired.
+1. Create a hash of information on securities you wish to track. 
+The hash must contain the following entries, but the user can add 
+more if desisired.
 
 =begin code
 # keys are the security symbols (tickers)
@@ -108,12 +115,12 @@ my %portfolio = %(
 );
 =end code
 
-1. Process each query path and the resulting single files are placed
+2. Process each query path and the resulting single files are placed
 in a holding directory. Refer to those files as "query results."
 
-2. Run the local process which takes each query result file in the holding directory
+3. Run the local process which takes each query result file in the holding directory
 and appends its new data to the end of the appropriate CVS table file in the data
-directory. The query result is the placed in the query file storage directory for
+directory. The query result is then placed in the query file storage directory for
 archiving. Those data can be deleted when the user is satisfied with the overall
 state of the data collection. 
 
@@ -122,9 +129,10 @@ first searched for in the directory defined by environment variable
 C<FINANCEAPI_DATA>. If that exists, it is used, otherwise,
 the current directory is used and a subdirectory named C<financeapi_data>
 is used (after creating it if it does not exist). 
+Under the data directory are three subdirectories are named C<csv-tables>, C<query-json-files>, and C<archive>.
+
 Existing data tables are
 first read and checked to ensure only new data are appended.
-
 The CSV table file naming format:
 
 =begin code

@@ -16,9 +16,13 @@ use FinanceAPI;
 DESCRIPTION
 ===========
 
-**FinanceAPI** has a set of routines to extract financial data from various markets around the world using their APIs. There is a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [https://financeapi.net](https://financeapi.net).
+The company [FinanceAPI](https://financeapi.net) provides a set of APIs to extract financial data from various markets around the world. 
 
-Yhe API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. On a Linux OS host, one can do this in the user's `$HOME/.bash_aliases` file:
+This Raku package provides routines to query the website and manage the received data.
+
+The company has a free tier with a limit of 100 queries per day. The user must obtain a personal API key in order to successfully use the full capability of this module to get desired data. See the details at [https://financeapi.net](https://financeapi.net).
+
+The API key obtained *must* be assigned to the user's environment variable `FINANCEAPI_APIKEY`. On a Linux OS host, one can do this in the user's `$HOME/.bash_aliases` file:
 
     export FINANCEAPI_APIKEY='dEfvhygSrfbFttgyhjfe3huj'
 
@@ -29,9 +33,41 @@ Local data location and use
 
 Currently, data are output to CSV tables, one uniquely named file per security `symbol` (also known as `ticker`). (Note an SQLite database is a desirable possibility for the future, PRs welcome!).
 
-The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Existing data tables are first read and checked to ensure only new data are appended.
+### General process
 
-The CSV table file naming format:
+1. Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desisired.
+
+    # keys are the security symbols (tickers)
+    my %portfolio = %(
+        # mandatory:
+        MRK => { # the ticker symbol for queries
+            type   => "security type", # stock, fund, option
+            # required but may be left empty
+            lots => {
+                =begin comment
+                # use your own lot key style as desired
+                idl => {
+                    buy-date => "yyyy-mm-dd",
+                    buy-total-price => 420.25,
+                    number-shares   => 40.0,
+                    sell-date => "", # format if sold: yyyy-mm-dd
+                    sell-total-price => "", # format if sold: 420.25
+
+                },
+                # etc.
+                =end comment
+            },
+        },
+        # etc, one hash entry per security
+    );
+
+2. Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
+
+3. Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
+
+The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Under the data directory are three subdirectories are named `csv-tables`, `query-json-files`, and `archive`.
+
+Existing data tables are first read and checked to ensure only new data are appended. The CSV table file naming format:
 
     {$data-directory}/{$symbol}-{$table-type}.csv
 
