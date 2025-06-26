@@ -5,7 +5,10 @@ Put tests needing an API key in /xt. Make note in
 the docs.
 
 For free tier, these work:
-  /v8/finance/spark # history, daily
+  /v6/finance/quote # real time data, lastest day, 
+    symbols 1..10 mrk, jagix
+
+  /v8/finance/Spark # history, daily
     range: 6mo
     interval: 1d
     symbols 1..10: mrk, jagix

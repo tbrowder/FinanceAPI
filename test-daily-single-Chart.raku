@@ -13,14 +13,7 @@ my $dir = "test-jsons".IO;
 my @fo;
 my $interval = "1d";
 my $range    = "5d";
-while @symbols {
-    my @s;
-    if @symbols.elems > 10 {
-        @s.push(@symbols.shift) for (0..^10);
-    }
-    else {
-        @s.push(@symbols.shift) while @symbols;
-    }
+for @symbols -> $symbol {
 
     # get a time-stamp and file type
     my $dt = DateTime.now.posix; # in seconds, should be same timestamp type as used
@@ -28,10 +21,14 @@ while @symbols {
     say "dt = '$dt'"; 
     #say "DEBUG exit..."; exit;
 
-    $res = path-v8FinanceSpark @s, :$interval, :$range;
-    $fo = "test-jsons/daily-test-{$dt}.json";
-    @fo.push: $fo;
+# test-daily-multi-Spark.raku
+# single ticker: test-chart.raku
+
+    $res = path-v8FinanceChart $symbol, :$range; 
+    $fo = "test-jsons/test-daily-single-Chart-{$dt}.json";
     $fo.IO.spurt: $res;
+    @fo.push: $fo;
 }
+
 say "See output JSON files:";
 say "  $_" for @fo;

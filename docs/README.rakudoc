@@ -101,13 +101,15 @@ C<$table-type> - the query type, e.g., 'daily', 'event'
 
 All tables are kept in date order from earliest to latest. For those tables
 that may have multiple events on the same day, the second key is the event
-type which currenly are:
+type which are:
 
-=defn s
-Sell
-
-=defn b
-buy
+=item B<BU> - Buy
+=item B<SE> - Sell
+=item B<SP> - Split
+=item B<DI> - Dividend
+=item B<RC> - Return of capital
+=item B<RS> - Reverse split
+=item B<SO> - Split
 
 Daily
 

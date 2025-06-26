@@ -11,11 +11,69 @@ use FinanceAPI::Subs;
 # security
 our $apikey is export = %*ENV<FINANCEAPI_APIKEY>;
 
+sub path-v6FinanceQuote(
+    # real time market data as of latest date
+    # run as a cron job overnight
+
+    # max of 10, leave empty for default values for the free tier
+    @symbols is copy where (@symbols.elems < 11), 
+
+    # other defaults
+    :$lang     = "EN",
+    :$region   = "US",
+    :$prettify = True,
+    :$debug,
+    ) is export {
+    unless @symbols.elems {
+        # defaults for free tier for JAGIX, MRK
+        @symbols = ["JAGIX", "MRK"];
+    }
+
+    my ($query, $chunk0, $chunk, $path, Str $body, $resp, $client);
+    # build the query string before handing it to Cro, note the form
+    # of straight URL requests
+    $query = <https://yfapi.net>;
+    $path = "/v6/finance/quote/";
+    $query ~= $path;
+    $chunk0 = "?lang={$lang}";
+    $query ~= $chunk0;
+
+    # symbols
+    my $symbols = @symbols.join(',');
+    $chunk  = "&symbols={$symbols}";
+    $query ~= $chunk;
+
+    # region
+    $chunk  = "&region={$region}";
+    $query ~= $chunk;
+
+    $client = Cro::HTTP::Client.new(
+        headers => [
+            accept => 'application/json',
+            X-API-KEY => "$apikey",
+        ],
+    );
+
+    $resp = await $client.get($query);
+    $body = await $resp.body-text();
+
+    # $body is a JSON string, prettify it...
+    if $prettify {
+        $body = prettify-json $body;
+    }
+
+    $body = "(null)" unless $body.chars;
+    say $body if $debug;
+    $body;
+
+}
+
 sub path-v8FinanceSpark(
-    # this is the daily security price  history
+    # this is the daily security price history
     
     # max of 10, leave empty for default values for the free tier
     @symbols is copy where (@symbols.elems < 11), 
+
     # defaults for free tier for JAGIX, MRK
     Str :$interval = "1d",  # 1d...(1m 5m 15m 1d 1wk 1mo)
     Str :$range    = "6mo", # 1d 5d 1mo 3mo 6mo 1y 5y max
@@ -32,7 +90,6 @@ sub path-v8FinanceSpark(
     }
 
     # stock history
-
     my ($query, $chunk0, $chunk, $path, Str $body, $resp, $client);
     # build the query string before handing it to Cro, note the form
     # of straight URL requests
@@ -41,6 +98,11 @@ sub path-v8FinanceSpark(
     $query ~= $path;
     $chunk0 = "?lang={$lang}";
     $query ~= $chunk0;
+
+    # symbols
+    my $symbols = @symbols.join(',');
+    $chunk  = "&symbols={$symbols}";
+    $query ~= $chunk;
 
     # region
     $chunk  = "&region={$region}";
@@ -52,11 +114,6 @@ sub path-v8FinanceSpark(
 
     # range
     $chunk  = "&range={$range}";
-    $query ~= $chunk;
-
-    # symbols
-    my $symbols = @symbols.join(',');
-    $chunk  = "&symbols={$symbols}";
     $query ~= $chunk;
 
     $client = Cro::HTTP::Client.new(

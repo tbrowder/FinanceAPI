@@ -1,0 +1,121 @@
+{
+  "chart" : {
+    "error" : null,
+    "result" : [
+      {
+        "meta" : {
+          "instrumentType" : "MUTUALFUND",
+          "chartPreviousClose" : 72.79,
+          "shortName" : "Janus Henderson Growth and Inco",
+          "fiftyTwoWeekHigh" : 81.42,
+          "timezone" : "EDT",
+          "exchangeName" : "NAS",
+          "currency" : "USD",
+          "hasPrePostMarketData" : false,
+          "firstTradeDate" : 674487000,
+          "fullExchangeName" : "Nasdaq",
+          "symbol" : "JAGIX",
+          "fiftyTwoWeekLow" : 58.73,
+          "regularMarketTime" : 1750890555,
+          "range" : "5d",
+          "gmtoffset" : -14400,
+          "longName" : "Janus Henderson Growth And Income T",
+          "priceHint" : 2,
+          "regularMarketPrice" : 73.94,
+          "currentTradingPeriod" : {
+            "regular" : {
+              "start" : 1750858200,
+              "timezone" : "EDT",
+              "end" : 1750881600,
+              "gmtoffset" : -14400
+            },
+            "pre" : {
+              "end" : 1750858200,
+              "timezone" : "EDT",
+              "start" : 1750838400,
+              "gmtoffset" : -14400
+            },
+            "post" : {
+              "end" : 1750896000,
+              "timezone" : "EDT",
+              "start" : 1750881600,
+              "gmtoffset" : -14400
+            }
+          },
+          "exchangeTimezoneName" : "America/New_York",
+          "validRanges" : [
+            "1mo",
+            "3mo",
+            "6mo",
+            "ytd",
+            "1y",
+            "2y",
+            "5y",
+            "10y",
+            "max"
+          ],
+          "dataGranularity" : "1d"
+        },
+        "timestamp" : [
+          1750253400,
+          1750426200,
+          1750685400,
+          1750771800,
+          1750858200
+        ],
+        "indicators" : {
+          "adjclose" : [
+            {
+              "adjclose" : [
+                72.62999725341797,
+                72.3499984741211,
+                72.97000122070312,
+                73.98999786376953,
+null
+              ]
+            }
+          ],
+          "quote" : [
+            {
+              "low" : [
+                72.62999725341797,
+                72.3499984741211,
+                72.97000122070312,
+                73.98999786376953,
+null
+              ],
+              "volume" : [
+                0,
+                0,
+                0,
+                0,
+null
+              ],
+              "high" : [
+                72.62999725341797,
+                72.3499984741211,
+                72.97000122070312,
+                73.98999786376953,
+null
+              ],
+              "open" : [
+                72.62999725341797,
+                72.3499984741211,
+                72.97000122070312,
+                73.98999786376953,
+null
+              ],
+              "close" : [
+                72.62999725341797,
+                72.3499984741211,
+                72.97000122070312,
+                73.98999786376953,
+null
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

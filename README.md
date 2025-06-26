@@ -45,9 +45,9 @@ where:
 
 All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which currenly are:
 
-**s**
+**s Sell**
 
-Sell
+
 
 **b**
 
