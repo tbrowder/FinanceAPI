@@ -90,7 +90,6 @@ The hash must contain the following entries, but the user can add
 more if desisired.
 
 =begin code
-# keys are the security symbols (tickers)
 my %portfolio = %(
     MRK => {
         type   => "security type",

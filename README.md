@@ -37,7 +37,6 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
 
 1. Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desisired.
 
-    # keys are the security symbols (tickers)
     my %portfolio = %(
         MRK => {
             type   => "security type",
