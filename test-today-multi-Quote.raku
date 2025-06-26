@@ -33,7 +33,7 @@ while @symbols {
 
     $res = path-v6FinanceQuote @s;
     # the output file: test-today-multi-Quote{1..N}.raku
-    $fo = "test-jsons/test-today-multi-Spark-{$dt}.json";
+    $fo = "test-jsons/test-today-multi-Quote-{$dt}.json";
     @fo.push: $fo;
     $fo.IO.spurt: $res;
 }
