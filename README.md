@@ -59,7 +59,13 @@ Step 2. Process each query path and the resulting single files are placed in a h
 
 Step 3. Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
 
-The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Under the data directory are three subdirectories are named `csv-tables`, `query-json-files`, and `archive`.
+The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Under the data directory are three subdirectories named:
+
+  * `csv-tables`
+
+  * `query-json-files`
+
+  * `archive`.
 
 Existing data tables are first read and checked to ensure only new data are appended. The CSV table file naming format:
 

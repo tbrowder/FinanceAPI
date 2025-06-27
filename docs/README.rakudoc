@@ -133,7 +133,11 @@ first searched for in the directory defined by environment variable
 C<FINANCEAPI_DATA>. If that exists, it is used, otherwise,
 the current directory is used and a subdirectory named C<financeapi_data>
 is used (after creating it if it does not exist). 
-Under the data directory are three subdirectories are named C<csv-tables>, C<query-json-files>, and C<archive>.
+Under the data directory are three subdirectories named:
+
+=item C<csv-tables>
+=item C<query-json-files>
+=item C<archive>.
 
 Existing data tables are
 first read and checked to ensure only new data are appended.

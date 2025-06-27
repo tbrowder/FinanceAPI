@@ -1,0 +1,44 @@
+use JSON::Pretty;
+
+use FinanceAPI;
+
+# use the old bin as a start
+my %*SUB-MAIN-OPTS = 
+    :named-anywhere,                # allow named variables at any location
+    :bundling,                      # allow bundling of named arguments
+    :coerce-allomorphs-to(Numeric), # coerce-allomorphic arguments to given type
+    :allow-no,                      # allow --no-foo as alternative to --/foo
+    :numeric-suffix-as-value,       # allow -j2 as alternative to --j=2
+;
+
+# the query help sub
+sub MAIN(
+    #$json-file where *.IO.r,
+    $query-type where * ~~ /quote|spark|daily|chart/, #= # quote|spark|chart|daily (daily is an alias for spark)
+    ) {} 
+
+=begin comment
+sub MAIN(
+
+    my $f = $json-file;
+    my $typ = $query-type;
+    my $data = from-json $f.IO.slurp;
+
+    with $typ {
+        when /:i quote/ {
+            # handle this type of query
+        }
+        when /:i chart/ {
+            # handle this type of query
+        }
+        when /:i spark|daily/ {
+            # handle this type of query
+        }
+        default {
+            say "FATAL: Unknown query-type '$typ'...exiting";
+            exit;
+        }
+    }
+}
+
+=end comment
