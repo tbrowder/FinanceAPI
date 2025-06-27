@@ -35,27 +35,29 @@ Currently, data are utimately output to CSV tables, uniquely named file per secu
 
 ### General process
 
-Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desisired.
+Step 1. Create a hash of information on securities you wish to track. The hash must contain the following entries, but the user can add more if desired. (Note the optional `lots` contents must contain certain keys and contents as shown next.)
 
     my %portfolio = %(
         MRK => {
             type   => "security type",
             lots => {
-                idl => {
-                    buy-date => "yyyy-mm-dd",
-                    buy-total-price => 420.25,
-                    number-shares   => 40.0,
-                    sell-date => "", 
-                    sell-total-price => "", 
-
-                },
             },
         },
     );
 
-Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
+The Format of the optional `lots` hash contents is shown below. Note lot ID keys have no required format, but a handy format will provde a natural sort in the order of first purchase to the latest. Prices must be Numeric, either UInt or a positive decimal number, in the usual currency for the security's market. Note the selling data values are empty strings until the lot is sold.
 
-Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
+    lot1 => {
+        buy-date => "yyyy-mm-dd",
+        buy-total-price => 420.25,
+        number-shares   => 40.0,
+        sell-date => "", 
+        sell-total-price => "", 
+    },
+
+Step 2. Process each query path and the resulting single files are placed in a holding directory. Refer to those files as "query results."
+
+Step 3. Run the local process which takes each query result file in the holding directory and appends its new data to the end of the appropriate CVS table file in the data directory. The query result is then placed in the query file storage directory for archiving. Those data can be deleted when the user is satisfied with the overall state of the data collection. 
 
 The file collections are first searched for in the directory defined by environment variable `FINANCEAPI_DATA`. If that exists, it is used, otherwise, the current directory is used and a subdirectory named `financeapi_data` is used (after creating it if it does not exist). Under the data directory are three subdirectories are named `csv-tables`, `query-json-files`, and `archive`.
 
@@ -71,7 +73,7 @@ where:
 
 ### CSV table formats
 
-All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which are:
+All tables are kept in date order from earliest to latest. For those tables that may have multiple events on the same day, the second key is the event type which is one of:
 
   * **BU** - Buy
 
