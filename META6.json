@@ -6,6 +6,7 @@
   "build-depends": [
   ],
   "depends": [
+    "JSON-CSV",
     "File::Find",
     "Cro",
     "Cro::HTTP::Client",

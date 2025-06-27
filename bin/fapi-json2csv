@@ -1,0 +1,28 @@
+use JSON::Pretty;
+
+use FinanceAPI;
+
+sub MAIN(
+    $json-file where *.IO.r,
+    $query-type where * ~~ /quote|spark|daily|chart/, #= #= quote|spark|chart|daily (daily is an alias for spark)
+    ) {
+    my $f = $json-file;
+    my $typ = $query-type;
+    my $data = from-json $f.IO.slurp;
+
+    with $typ {
+        when /:i quote/ {
+            # handle this type of query
+        }
+        when /:i chart/ {
+            # handle this type of query
+        }
+        when /:i spark|daily/ {
+            # handle this type of query
+        }
+        default {
+            say "FATAL: Unknown query-type '$type'...exiting";
+            exit;
+        }
+    }
+}
